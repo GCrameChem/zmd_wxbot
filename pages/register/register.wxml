@@ -1,0 +1,165 @@
+<!--pages/register/register.wxml-->
+<view class="container">
+  <image class="background-image" src="cloud://env-6gwdgqfkc232ef67.656e-env-6gwdgqfkc232ef67-1338470007/bg1.png" mode="aspectFill"></image>
+  <view class="header">
+    <text class="title">注册您的账号吧</text>
+    <van-icon name="chat-o" size="28px" class="icon"/>
+  </view>
+  <!-- 设置弹出层-------知情同意书 -->
+  <!-- ======================= -->
+  <van-overlay show="{{ show }}" class="wrapper">
+    <view class="wrapper">
+      <view class="block" catch:tap="noop" >
+        <!-- 知情同意书阅读 -->
+        <scroll-view class="agreement" scroll-y="true" bindscroll="onScroll">
+              <view>
+                <!-- 用户同意书内容 -->
+                <h1 class="first-title">青少年心理评估与支持小程序使用知情同意书</h1>
+                <text> \n </text>
+                <p class="greeting">亲爱的同学：您好！</p>
+                <text> \n </text>
+                <p class="content">我们邀请您参加“心理评估与支持小程序使用”活动。</p>
+                <text> \n </text>
+                <h2 class="section-title">1. 为什么要开展青少年心理评估与支持小程序使用活动？</h2>
+                <text> \n </text>
+                <p class="content">
+                  在中小学阶段，青少年正经历重要的生理与心理变化，因此心理支持显得尤为重要。
+                  本次活动计划开发一款微信小程序聊天机器人，旨在进行心理评估的同时，
+                  为青少年提供心理支持。通过与机器人对话，青少年能够获得个性化的心理支持，
+                  而机器人则会收集关于家庭环境、社交能力和学校氛围等各个方面的信息，
+                  以全面了解与评估大家的心理状态。我们希望这一心理评估与支持小程序能积极影响更多孩子，
+                  帮助青少年更有效地应对成长中的挑战，实现真正的心理健康。
+                </p>
+                <text> \n </text>
+                <h2 class="section-title">2. 如果参加青少年心理评估与支持小程序使用活动，您需要做什么？</h2>
+                <text> \n </text>
+                <p class="content">
+                  您可以通过微信小程序与机器人进行自然对话，
+                  在围绕基本心理状况、社交情况、自我认知等话题展开交流的同时，
+                  也可以自由地与机器人聊天（例如自己感兴趣的话题、倾诉自己的想法与感受等）。
+                  同时，在交流过程中，希望您能真实地回应一些相关问题，
+                  这将有助于我们更好地理解您的心理状态。
+                  此外，也请您知晓本测评数据将用于学生身心健康分析，
+                  从而为今后开展更有效的心理健康促进服务提供依据，
+                  所有的分析都采用不记名的方式，保护您的隐私。
+                </p>
+                <text> \n </text>
+                <h2 class="section-title">3. 参加青少年心理评估与支持小程序使用活动有哪些可能的好处？</h2>
+                <text> \n </text>
+                <p class="content">
+                  参与本次活动，您可以通过表达自己的想法和感受获得情绪支持以及相关的建议与指导。
+                  同时，参与本次活动您还将获得丰厚的小礼品或报酬。
+                </p>
+                <text> \n </text>
+                <h2 class="section-title">4. 参加青少年心理评估与支持小程序使用活动需要支付有关费用吗？</h2>
+                <text> \n </text>
+                <p class="important-content">不需要支付任何费用。</p>
+                <text> \n </text>
+                <h2 class="section-title">5. 个人信息是保密的吗？</h2>
+                <text> \n </text>
+                <p class="content">
+                  本次活动的数据将会严格保密数据，确保不泄露任何信息。
+                  我们将尽一切努力，在法律允许的范围内，保护您的个人测评资料和个人信息的隐私。
+                </p>
+                <!-- ... -->
+              </view>
+        </scroll-view>
+        <!-- 按钮容器 -->
+        <view class="button-container">
+          <button
+            bindtap="onCancel"
+            class=" button model-button"
+          > 拒绝 </button>
+          <button
+            disabled="{{ !isAgreed }}"
+            class="model-button"
+            bindtap="onAgree"
+          > 同意{{acceptCountdown > 0 ? '(' + acceptCountdown + 's)' : ''}}</button>
+        </view>
+      </view>
+    </view>
+  </van-overlay>
+<!-- ========================== -->
+  <view class="form-container">
+
+    <view class="input-field">
+      <van-field
+        value="{{ user_name }}"
+        clearable
+        placeholder="请输入您的手机号"
+        bind:change="onChange_id"
+        bind:blur="onBlur_id"
+        custom-class="new-input"
+      />
+      <view class="error-message" wx:if="{{ errorMessage_id }}">
+        {{ errorMessage_id }}
+      </view>
+    </view>
+    <!-- 获取验证码部分（验证码输入框和获取验证码按钮同一行） -->
+    <view class="input-field">
+      <view class="flex-container">
+        <van-field
+          value="{{ verification_code }}"
+          clearable
+          placeholder="请输入验证码"
+          bind:change="onChange_code"
+          bind:blur="onBlur_code"
+          custom-class="new-input"
+            
+        />
+        <!-- 验证码发送按钮 -->
+        <button 
+          type="info"
+          class="send-code"
+          bindtap="sendVerificationCode"
+          disabled="{{ isCodeButtonDisabled }}"
+        >
+          {{ isCodeButtonDisabled ? '重新发送 (' + timeRemaining + 's)' : '获取' }}
+        </button>
+      </view>
+      <view class="error-message" wx:if="{{ errorMessage_code }}">
+          {{ errorMessage_code }}
+      </view>
+    </view>
+   
+
+    <view class="input-field">
+      <van-field
+        value="{{ user_password }}"
+        type="password"
+        placeholder="设置密码_仅由6-12位的大小写字母和数字组成"
+        border="{{ false }}"
+        bind:change="onChange_password0"
+        bind:blur="onBlur_password0"
+        custom-class="new-input"
+      />
+      <view class="error-message" wx:if="{{ errorMessage_password0 }}">
+        {{ errorMessage_password0 }}
+      </view>
+    </view>
+
+    <view class="input-field">
+      <van-field
+        value="{{ user_password }}"
+        type="password"
+        placeholder="再次输入确认您的密码"
+        border="{{ false }}"
+        bind:change="onChange_password1"
+        bind:blur="onBlur_password1"
+        custom-class="new-input"
+      />
+      <view class="error-message" wx:if="{{ errorMessage_password1 }}">
+        {{ errorMessage_password1 }}
+      </view>
+    </view>
+
+  <view class="login-filed">
+    <van-button round type="info" bindtap="register" custom-class="new-login">注册</van-button>
+    <view class="error-message" wx:if="{{ errorMessage }}">
+        {{ errorMessage }}
+      </view>
+    <van-button round type="info" bindtap="return" custom-class="return-button">返回</van-button>
+  </view>
+
+  </view>
+</view>

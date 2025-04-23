@@ -1,0 +1,92 @@
+<!--pages/register/register.wxml-->
+<view class="container">
+  <!-- <image class="background-image" src=" https://yunxig.cn/images/bg1.png" mode="aspectFill"></image> -->
+  <image class="background-image" src="cloud://env-6gwdgqfkc232ef67.656e-env-6gwdgqfkc232ef67-1338470007/bg1.png" mode="aspectFill"></image>
+  <view class="header">
+    <text class="title">重新设置密码</text>
+    <van-icon name="chat-o" size="28px" class="icon"/>
+  </view>
+  <view class="form-container">
+
+    <view class="input-field">
+      <van-field
+        value="{{ user_name }}"
+        clearable
+        placeholder="请输入您的手机号"
+        bind:change="onChange_id"
+        bind:blur="onBlur_id"
+        custom-class="new-input"
+      />
+      <view class="error-message" wx:if="{{ errorMessage_id }}">
+        {{ errorMessage_id }}
+      </view>
+    </view>
+
+     <!-- 获取验证码部分（验证码输入框和获取验证码按钮同一行） -->
+     <view class="input-field">
+      <view class="flex-container">
+        <van-field
+          value="{{ verification_code }}"
+          clearable
+          placeholder="请输入验证码"
+          bind:change="onChange_code"
+          bind:blur="onBlur_code"
+          custom-class="new-input"
+            
+        />
+        <!-- 验证码发送按钮 -->
+        <button 
+          type="info"
+          class="send-code"
+          bindtap="sendVerificationCode"
+          disabled="{{ isCodeButtonDisabled }}"
+        >
+          {{ isCodeButtonDisabled ? '重新发送 (' + timeRemaining + 's)' : '获取' }}
+        </button>
+      </view>
+      <view class="error-message" wx:if="{{ errorMessage_code }}">
+          {{ errorMessage_code }}
+      </view>
+    </view>
+   
+
+    <view class="input-field">
+      <van-field
+        value="{{ user_password }}"
+        type="password"
+        placeholder="重置密码_仅由6-12位的大小写字母和数字组成"
+        border="{{ false }}"
+        bind:change="onChange_password0"
+        bind:blur="onBlur_password0"
+        custom-class="new-input"
+      />
+      <view class="error-message" wx:if="{{ errorMessage_password0 }}">
+        {{ errorMessage_password0 }}
+      </view>
+    </view>
+
+    <view class="input-field">
+      <van-field
+        value="{{ user_password }}"
+        type="password"
+        placeholder="再次输入确认您的密码"
+        border="{{ false }}"
+        bind:change="onChange_password1"
+        bind:blur="onBlur_password1"
+        custom-class="new-input"
+      />
+      <view class="error-message" wx:if="{{ errorMessage_password1 }}">
+        {{ errorMessage_password1 }}
+      </view>
+    </view>
+
+  <view class="login-filed">
+    <van-button round type="info" bindtap="reset_password" custom-class="new-login">重置</van-button>
+    <view class="error-message" wx:if="{{ errorMessage }}">
+        {{ errorMessage }}
+      </view>
+    <van-button round type="info" bindtap="return" custom-class="return-button">返回</van-button>
+  </view>
+
+  </view>
+</view>

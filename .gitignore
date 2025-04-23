@@ -1,0 +1,29 @@
+# Node.js dependencies
+node_modules/
+
+# WeChat Mini Program npm dependencies
+miniprogram_npm/
+
+# Build output
+/dist/
+# 小程序构建文件夹（例如：HBuilderX 的构建输出目录）
+/unpackage/
+
+# 微信小程序本地缓存和临时文件
+/.idea/
+.DS_Store
+
+# 微信开发工具的配置文件夹
+/.vscode/
+weapp/
+project.config.json
+
+# 操作系统生成的文件
+Thumbs.db
+desktop.ini
+
+# 日志文件
+*.log
+
+# 编译缓存
+*.swp

@@ -1,0 +1,99 @@
+<view class="container">
+  <image class="background-image" src="cloud://env-6gwdgqfkc232ef67.656e-env-6gwdgqfkc232ef67-1338470007/bg1.png" mode="aspectFill"></image>
+  <view class="header">
+    <text class="title">登录，\n 心灵之旅</text>
+    <van-icon name="chat-o" size="28px" class="icon"/>
+  </view>
+  <view class="form-container">
+    <view class="input-field">
+      <van-field
+        value="{{ user_name }}"
+        clearable
+        placeholder="请输入您的手机号"
+        bind:change="onChange_name"
+        custom-class="new-input"
+      />
+    </view>
+    <view class="input-field">
+      <van-field
+        value="{{ user_password }}"
+        type="password"
+        placeholder="请输入您的密码"
+        border="{{ false }}"
+        bind:change="onChange_password"
+        custom-class="new-input"
+      />
+    </view>
+  <!-- <text>用户名：</text>
+  <input placeholder="请输入用户名" bindinput="bindUsernameInput" />
+  <text>密码：</text>
+  <input type="password" placeholder="请输入密码" bindinput="bindPasswordInput" /> -->
+  <view class="login-filed">
+    <van-button round type="info" bindtap="login" custom-class="new-login">登录</van-button>
+    <van-button plain type="primary" bindtap="register" custom-class="register-button">首次登录小程序，先点击此处进行注册</van-button>
+    <van-button plain type="primary" bindtap="change_password" custom-class="register-button">忘记密码?</van-button>
+  </view>
+  </view>
+  <view class="icon-container" >
+    <van-icon bindtap="instruction" name="question-o" class="question-icon"/>
+  </view>
+  <!-- 遮罩层 -->
+  <van-overlay show="{{ show }}" class="wrapper">
+    <view class="wrapper">
+      <view class="block" catch:tap="noop" >
+        <!-- 实施说明书阅读----帮助---- -->
+        <scroll-view class="agreement" scroll-y="true" bindscroll="onScroll">
+              <view>
+                <h1  class="first-title">小程序使用帮助</h1>
+                <text> \n </text>
+                <!-- <h2 class="section-title">访问说明</h2>
+                <text> \n </text>
+                <h3 class="third-title">访问时间</h3>
+                <text> \n </text>
+                <p class="content">2024年11月X日至2024年11月X日时间内的周五、周六、周日（具体日期为：XXX）全天时段开放可访问。</p>
+                <text> \n </text>
+                <h3 class="third-title">访问限制</h3>
+                <text> \n </text>
+                <p class="content">在开放日期内，每天小程序的使用时长限制在20分钟以内，以确保学生合理利用时间。</p>
+                <text> \n </text>
+                <text> \n </text>
+                <h2 class="section-title">使用说明</h2> -->
+                <!-- <text> \n </text> -->
+                <h3 class="third-title">使用流程</h3>
+                <text> \n </text>
+                <p class="content">（1）首次登录小程序需要先进行注册，注册流程为先阅读知情同意书自愿同意后，以用户的手机号作为账号，同时设置密码以完成注册。</p>
+                <text> \n </text>
+                <p class="content">（2）注册之后，进入登录页面，账号为注册使用的手机号，密码为注册时设置的密码。用户通过输入上述信息完成登录，进入聊天界面。</p>
+                <text> \n </text>
+                <p class="content">（3）聊天页面提供语音输入和文字输入两种方式，用户可根据需要自由切换。</p>
+                <text> \n </text>
+                <h3 class="third-title">对话说明</h3>
+                <text> \n </text>
+                <p class="content">程序采用开放式对话模式，允许学生在交流中自由表达。学生不仅可以回答机器人的问题，还可以主动向机器人提问，或倾诉自己的想法和感受。</p>
+                <text> \n </text>
+                <h3 class="third-title">使用环境条件</h3>
+                <text> \n </text>
+                <p class="content">家长应尽量避免旁观学生访问小程序，给予学生一个安全、私密、自然的交流空间，鼓励其自由与聊天机器人对话。</p>
+                <text> \n </text>
+                <h3 class="third-title">学生使用注意</h3>
+                <text> \n </text>
+                <p class="content">（1）采用语音输入时需使用普通话，以确保机器人能够准确识别。</p>
+                <text> \n </text>
+                <p class="content">（2）开放聊天并真实表达自己的想法和情感，以便更有效的对话。</p>
+                <text> \n </text>
+                <p class="content">（3）确保在对话中不透露个人敏感信息，如家庭住址、个人姓名等，以保护隐私。</p>
+                <text> \n </text>
+                <p class="content">（4）遵守小程序使用规范，禁止发送不正当内容，维护交流环境的安全。</p>
+              </view>
+        </scroll-view>
+        <!-- 按钮容器 -->
+        <view class="button-container">
+          <button
+            class="button model-button"
+            bindtap="onClose"
+          > 明白了</button>
+        </view>
+      </view>
+    </view>
+  </van-overlay>
+</view>

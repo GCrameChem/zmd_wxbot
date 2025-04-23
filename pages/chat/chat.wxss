@@ -1,0 +1,391 @@
+/* pages/chat/chat.wxss */
+@import "/wxss/we_ui/weui.wxss";
+page {
+  height: 100%;
+  overflow: hidden;
+}
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* 将图片放在最底层 */
+}
+
+
+.container {
+  overflow: hidden;
+  /* bug! */
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  padding: 15rpx 15rpx;
+}
+
+.chat-container {
+  height: 48%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  /* flex-wrap: wrap; */
+  padding: 15rpx 15rpx;
+}
+
+.chat-list {
+  flex: 1;
+  padding-bottom: 40rpx;
+}
+.scrool-view {
+  height: 80%
+}
+
+.chat-left {
+  display: flex;
+  align-items: center;
+  margin-top: 20rpx;
+}
+
+.chat-left text {
+  flex: 1;
+  margin-left: 10rpx;
+  padding: 10rpx 0;
+  background-color: #e9ecf3;
+  color: #000;
+  border-radius: 11rpx;
+  word-break: break-all;
+  box-sizing: border-box;
+}
+
+.chat-bubble-left {
+  position: relative; /* 为伪元素定位 */
+  max-width: 70%;
+  background-color: #e9ecf3;
+  color: #000;
+  padding: 10rpx 15rpx;
+  border-radius: 10rpx;
+  margin-left: 15rpx;
+  /* margin-left: 10rpx; */
+  word-break: break-all;
+}
+
+.chat-bubble-left::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -15rpx; /* 调整尖的位置 */
+  width: 0;
+  height: 0;
+  border: 15rpx solid transparent; /* 调整边框大小 */
+  border-right-color: #e9ecf3; /* 气泡尖的颜色与气泡相同 */
+  border-left: 0;
+  margin-top: -15rpx; /* 调整尖的垂直对齐 */
+}
+
+.chat-right {
+  display: flex;
+  align-items: center;
+  margin-top: 20rpx;
+  /* 右对齐 */
+  justify-content: flex-end; 
+  
+}
+
+.chat-right text {
+  flex: 1;
+  color: #000;
+  margin-right: 10rpx;
+  padding: 10rpx 0;
+  border-radius: 11rpx;
+  word-break: break-all;
+  box-sizing: border-box;
+}
+
+.chat-bubble-right {
+  position: relative; /* 为伪元素定位 */
+  max-width: 70%;
+  background-color: #77cae8;
+  padding: 10rpx 15rpx;
+  border-radius: 10rpx;
+  margin-right: 25rpx;
+  /* margin-right: 10rpx; */
+  word-break: break-all;
+}
+.chat-bubble-right::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -15rpx; /* 调整尖的位置 */
+  width: 0;
+  height: 0;
+  border: 15rpx solid transparent; /* 调整边框大小 */
+  border-left-color: #77cae8; /* 气泡尖的颜色与气泡相同 */
+  border-right: 0;
+  margin-top: -15rpx; /* 调整尖的垂直对齐 */
+}
+
+.voice-bubble {
+  max-width: 85%;
+  background-color: #77cae8; /* 气泡颜色 */
+  padding: 0 15rpx;
+  border-radius: 10rpx;
+  margin-right: 25rpx;
+  /* margin-right: 10rpx; */
+  word-break: break-all;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+/* 语音时间文本 */
+.voice-time {
+  color: #000; /* 文字颜色 */
+  /* margin-right: 10rpx; */
+}
+
+/* 语音图标 */
+.voice-icon {
+  width: 45rpx;
+  height: 45rpx;
+  /* margin-right: 10rpx; */
+}
+
+ /* 右边气泡尖 */
+.voice-bubble::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -15rpx; /* 调整尖的位置 */
+  width: 0;
+  height: 0;
+  border: 15rpx solid transparent; /* 调整边框大小 */
+  border-left-color: #77cae8; /* 气泡尖的颜色与气泡相同 */
+  border-right: 0;
+  margin-top: -15rpx; /* 调整尖的垂直对齐 */
+} 
+
+.icon-left {
+  margin-right: 10rpx;
+}
+.icon-right {
+  margin-left: 10rpx;
+}
+
+.avatar-img {
+  width: 70rpx;
+  height: 70rpx;
+  border-radius: 70rpx;
+}
+
+
+/* 虚拟形象部分 */
+.ai-container {
+  /* margin-top: 2%; */
+  width: 98%;
+  position: relative;
+  align-items: flex-start;
+  flex: 1;
+  height: 50%;
+  display: flex;
+  /* left: 5%; */
+  bottom: 10%; /* 距离页面底部20%的距离 */
+  background-color: #e6edfd;
+}
+.ai-img {
+  margin-top: 10%;
+  width: 60vw;
+  object-fit: contain;
+  /* width: 100vw;
+  height: auto; */
+}
+
+.ai-context {
+  display: flex;
+  width: 60%;
+  font-size: 14px;
+  margin-top: 5%;
+  margin-right: 2%;
+}
+/* ai-气泡尖
+.tri-top {
+  position: relative;
+  border-top: 15rpx solid #42839b;
+  border-left: 20rpx solid transparent;
+  margin-top: 40rpx;
+  margin-left: 10rpx;
+}
+
+.tri-top2 {
+  top: -12rpx;
+  left: -4rpx;
+  position: absolute;
+  border-top: 30rpx solid #e6edfd;
+  border-left: 20rpx solid transparent;
+} */
+/* ai-气泡尖 */
+.tri-top {
+  position: relative;
+  border-top: 15rpx solid #42839b;
+  border-left: 20rpx solid transparent;
+  margin-top: 120rpx;
+  margin-left: 10rpx;
+}
+
+.tri-top2 {
+  position: absolute;
+  border-top: 30rpx solid #e6edfd;
+  border-left: 20rpx solid transparent;
+  top: -12rpx;
+  left: -4rpx;
+  margin-top: 4rpx;  /* 增加此值，向下移动气泡尖 */
+}
+
+.ai-bubble {
+  word-break: break-all;
+  text-align: justify;
+  width: 100%;
+  padding: 16rpx;
+  border-radius: 14rpx;
+  border: 6rpx solid #42839b;
+  line-height: 40rpx;
+  /* position: relative;
+  width: 50%;
+  background-color: #fff; /* 聊天气泡背景色 
+  padding: 10rpx 15rpx; /* 根据需要调整内边距 
+  border-radius: 20rpx; /* 圆角 
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.2); 阴影效果 */
+  /* margin-left: 10rpx; 根据需要调整与图片的间距 */
+}
+/* .ai-bubble::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -20rpx; /* 调整尖的位置 
+  width: 0;
+  height: 0;
+  border: 20rpx solid transparent; /* 调整边框大小 
+  border-right-color: #fff; /* 气泡尖的颜色与气泡相同 
+  border-left: 0;
+  margin-top: -20rpx; /* 调整尖的垂直对齐 
+  
+}
+.ai-bubble text {
+  color: #000;
+  word-break: break-all;
+} */
+
+/* 输入按键区部分 */
+
+.ask-input-container {
+  height: 6%;
+  width: 98%;
+  position: fixed;
+  bottom: 40rpx;
+  display: flex;
+  align-items: center;
+}
+
+.send-img {
+  margin: 20rpx;
+  width: 16%;
+}
+
+.text-video-img {
+  width: 10%;
+  height: auto;
+  border-radius: 60rpx;
+  margin: 20rpx;
+}
+
+.ask-input-container textarea {
+  width: 65%;
+  background: white;
+  border-radius: 25rpx;
+  flex: 1;
+  margin-left: 10rpx;
+  margin-right: 10rpx;
+  height:2rem;
+  min-height:2rem;
+  max-height: 120rpx;
+  overflow-y: auto;
+  padding: 10px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  line-height: 1.5;
+  resize: none
+}
+
+.ask-input-container button {
+  flex: 1;
+  width: 65%;
+  height:2.5rem;
+  min-height:2.5rem;
+  font-size:16px;
+  font-weight: bolder;
+  margin-left: 10rpx;
+  margin-right: 10rpx;
+  justify-content: center; /* 水平居中 */
+  align-items: center;
+  /* position: relative; */
+  display: flex;
+  box-sizing: border-box;
+  text-decoration: none;
+  color: #000000;
+  line-height: 2rem;
+  border-radius: 15rpx;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.button-hover{
+  background-color:#fff;
+}
+
+.pos-rel {
+  position: relative;
+}
+
+.pos-abs {
+  position: absolute;
+}
+
+.olami-info{
+  font-size: 10px;
+  align-items: right;
+}
+
+.speaker{ 
+    position: fixed; 
+    left: 50%;
+    top: 50%;
+    margin-top: -50px;
+    margin-left: -50px;
+    width: 30%;
+    height: 20%;
+} 
+
+.showAuthor{
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.author{
+  text-align: right;
+  margin-left: 19%;
+}
+ /* .input-big {
+  width: 100%;
+  min-height: 40rpx; 
+  max-height: 120rpx;
+  overflow-y: auto;
+  padding: 10px; 
+  border: 1px solid #ccc;
+  border-radius: 5px; 
+  font-size: 16px;
+  line-height: 1.5;
+  resize: none; 
+}  */
+
+

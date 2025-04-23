@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "@vant/weapp": "^1.11.6",
+    "tdesign-miniprogram": "^1.4.5"
+  },
+  "name": "wxbot",
+  "description": "![image](https://github.com/AndyZmd/wxbot/raw/master/res/image/text.png)",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

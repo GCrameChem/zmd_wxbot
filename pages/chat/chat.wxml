@@ -1,0 +1,101 @@
+<!--pages/chat/chat.wxml-->
+<custom-nav title="EmoMind"></custom-nav>
+<image class="background-image" src="cloud://env-6gwdgqfkc232ef67.656e-env-6gwdgqfkc232ef67-1338470007/bg4.png" mode="aspectFill"></image>
+<view class="container">
+  <view class="chat-container">
+    <!-- 聊天显示部分 -->
+    <scroll-view class="scrool-view" scroll-y="true" scroll-with-animation="true" scroll-into-view="{{scrolltop}}" enable-back-to-top="true">
+      <view class="chat-list">
+        <block wx:for="{{chatList}}" wx:key="time">
+         <view wx:if="{{index < chatList.length - 1 || (index === chatList.length - 1 && item.role === 'user')}}">
+             <!-- AI -->
+          <view id="roll{{index + 1}}" class="chat-left" wx:if="{{item.role == 'assistant'}}">
+            <!-- 左侧头像 -->
+            <!-- <van-icon name="service-o" size="28px" class="icon-left"/> -->
+            <view class="chat-bubble-left">
+              <text>{{item.content}}</text>
+            </view>
+            <!-- 这个是用来产生间距的 -->
+            <image class="avatar-img"></image>
+            <image class="avatar-img"></image>
+          </view>
+          <!-- 用户 -->
+          <view id="roll{{index + 1}}" class="chat-right" wx:if="{{item.role == 'user'}}">
+            <!-- 文本内容显示 -->
+            <!-- 这个是用来产生间距的 -->
+            <image class="avatar-img"></image>
+            <image class="avatar-img"></image>
+            <view wx:if="{{item.type=='text'}}" class="chat-bubble-right">
+              <text>{{item.content}}</text>
+            </view>
+            <!-- 语音消息显示 -->
+            <view wx:if="{{item.type=='voice'}}">
+              <view class="voice-bubble" bind:tap="playVoice" data-url="{{item.url}}" data-index="{{index}}">
+                <image class="voice-icon" src="cloud://env-6gwdgqfkc232ef67.656e-env-6gwdgqfkc232ef67-1338470007/play.png" wx:if="{{!item.isPlaying}}"></image>
+                <image class="voice-icon" src="cloud://env-6gwdgqfkc232ef67.656e-env-6gwdgqfkc232ef67-1338470007/pause.png" wx:if="{{item.isPlaying}}"></image>
+                <image class="voice-icon" src="cloud://env-6gwdgqfkc232ef67.656e-env-6gwdgqfkc232ef67-1338470007/voice1.png"></image>
+                <!-- 语音气泡长度根据秒数进行适应长度整 -->
+                <text class="voice-time" style="margin-left: {{ (item.second / 10) * 5 }}rpx">{{item.second}}"</text>
+              </view>
+            </view>
+            <!-- 右侧头像 -->
+            <!-- <van-icon name="user-circle-o" size="28px" class="icon-right"/> -->
+          </view>
+         </view>
+        </block>
+      </view>
+    </scroll-view>
+  </view>
+  <!-- 虚拟形象部分 -->
+  <view class="ai-container">
+      <!-- <image class="ai-img" src="./images/girl.png" mode="widthFix" ></image> -->
+      <!--   class="ai-img"  -->
+      <!-- https://yunxig.cn/images/panda2.gif -->
+        <image
+          src="cloud://env-6gwdgqfkc232ef67.656e-env-6gwdgqfkc232ef67-1338470007/panda2.gif"
+          mode="aspectFit"
+          class="ai-img"
+        ></image>
+    <view class="ai-context">
+      <!-- 聊天气泡尖 -->
+      <view class="tri-top">
+        <view class="tri-top2"></view>
+      </view>
+      <view class="ai-bubble" wx:if="{{chatList.length > 0}}">
+        <text wx:if="{{chatList[chatList.length - 1].role === 'assistant'}}">{{chatList[chatList.length - 1].content}}</text>
+        <text wx:else>本熊猫盼达正在好好思考呢，请稍等一下，我马上就能给你答复啦！</text>
+      </view>
+      <!-- 最开始进入时的欢迎语 -->
+      <view class="ai-bubble" wx:if="{{chatList.length==0}}">
+        <text>hello!欢迎来跟我聊天！今天你学习状态怎么样呀，学习任务顺利完成了吗？</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 输入按键部分 -->
+  <view class="ask-input-container">
+    <!-- 语音/文本输入标识 -->
+    <image class="text-video-img" mode="widthFix" src="cloud://env-6gwdgqfkc232ef67.656e-env-6gwdgqfkc232ef67-1338470007/voice.png" hidden="{{keyboard}}" bindtap="switchInputType"></image>     
+    <image class="text-video-img" mode="widthFix" src="cloud://env-6gwdgqfkc232ef67.656e-env-6gwdgqfkc232ef67-1338470007/keyboard.png" hidden="{{!keyboard}}" bindtap="switchInputType"></image>
+    <!-- 文本输入框 -->
+    <!-- bindconfirm="sendChat"  -->
+    <!-- 输入有Bug，到达一定长度就无法输入了 -->
+    <!-- <textarea class="input-big" hidden="{{keyboard}}" focus="{{!keyboard}}" placeholder="" name="ask_word" type="text"  
+    confirm-type="done" value="{{askWord}}" auto-height show-confirm-bar bindinput="handleInput"></textarea> -->
+    <textarea class="input-big" hidden="{{keyboard}}" focus="{{false}}" placeholder="" name="ask_word" type="text"  
+    confirm-type="done" value="{{askWord}}" auto-height show-confirm-bar bindinput="handleInput"></textarea>
+    <!-- 发送按钮//图片形式 -->
+    <!-- <view wx:if="{{recordStatus&&!isWaitReply}}">
+      <van-loading color="#ffffff" size="18px">
+          <text style="color: #ffffff;">正在录音,向上滑动取消发送...</text>
+      </van-loading>
+    </view> -->
+    <image class="send-img"  hidden= "{{keyboard}}"  mode="widthFix" src="cloud://env-6gwdgqfkc232ef67.656e-env-6gwdgqfkc232ef67-1338470007/send.png" catchtap="sendChat"></image>
+    <button hidden="{{!keyboard}}" bindlongpress="touchdown" bindtouchend="touchup" bindtouchmove="cancelRecorderManager">
+      {{recordStatus&&!isWaitReply ? '上滑取消发送' : '按住说话'}}
+    </button>
+    <!-- 图片禁用模式 -->
+    <image class="send-img"  hidden= "{{!keyboard}}"  mode="widthFix" src="cloud://env-6gwdgqfkc232ef67.656e-env-6gwdgqfkc232ef67-1338470007/send.png"></image>
+  </view>
+</view>
+<!-- <image class="speaker" hidden="{{!isSpeaking}}" src="../image/user.jpg"></image> -->

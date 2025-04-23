@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "custom-nav": "../../components/custom-nav/custom-nav",
+    "van-icon": "@vant/weapp/icon/index",
+    "van-loading": "@vant/weapp/loading/index",
+    "t-icon": "tdesign-miniprogram/icon/icon"
+  }
+}
