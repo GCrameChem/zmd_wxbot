@@ -206,11 +206,11 @@ Page({
           });
 
           // 使用 request.js 来调用文本安全检测
-          checkContentSafety(word, res.code).then((res) => {
+          api.checkContentSafety(word, res.code).then((res) => {
             console.log("文本检测的信息 res.data.status = ", res.data.status);
             if (res.data.status === 200) {
               // 文本内容合法，继续聊天
-              sendTextChat(chatapp.globalData.id, word, that.data.jscode).then((res) => {
+              api.sendTextChat(chatapp.globalData.id, word, that.data.jscode).then((res) => {
                 console.log(res.data.data);
                 if (res.data.status === 200) {
                   // 正常对话过程

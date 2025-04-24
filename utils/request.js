@@ -11,16 +11,33 @@ function request(options) {
   // 请求的url应该拼接在base_url后
   const fullUrl = config.base_url + url;
 
+  // 打印请求的配置
+  console.log('Request:', {
+    url: fullUrl,
+    method: method,
+    data: data,
+    headers: {
+      'content-type': 'application/json',
+      ...header,  // 合并传入的header
+    },
+  });
+
   return new Promise((resolve, reject) => {
     wx.request({
       url: fullUrl,
       method: method,
       data: data,
       header: {
-        'content-type': 'application/json; charset=utf-8',
+        'content-type': 'application/json',
         ...header,  // 合并传入的header
       },
       success(res) {
+        // 打印响应数据
+        console.log('Response:', {
+          statusCode: res.statusCode,
+          data: res.data,
+        });
+
         if (res.statusCode === 200) {
           if (res.data.status === 200) {
             // 成功回调
@@ -44,6 +61,9 @@ function request(options) {
         }
       },
       fail(error) {
+        // 打印错误
+        console.log('Request failed:', error);
+
         wx.showToast({
           title: '请求出错，请稍后再试。',
           icon: 'none',

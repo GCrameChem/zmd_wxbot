@@ -68,28 +68,28 @@ Page({
     // 处理捕获事件，防止点击穿透
   },
   // // 计算是否划到滚动条底部以能获取点击同意的权限
-  // onScroll(e) {
-  //   const query = wx.createSelectorQuery();
-  //   query.select('.agreement').boundingClientRect((rect) => {
-  //     if (rect) {
-  //       const scrollHeight = e.detail.scrollHeight; // 内容总高度
-  //       const clientHeight = rect.height; // 可视区域高度
+  onScroll(e) {
+    const query = wx.createSelectorQuery();
+    query.select('.agreement').boundingClientRect((rect) => {
+      if (rect) {
+        const scrollHeight = e.detail.scrollHeight; // 内容总高度
+        const clientHeight = rect.height; // 可视区域高度
   
-  //       console.log('scrollTop:', e.detail.scrollTop);
-  //       console.log('scrollHeight:', scrollHeight);
-  //       console.log('clientHeight:', clientHeight);
+        console.log('scrollTop:', e.detail.scrollTop);
+        console.log('scrollHeight:', scrollHeight);
+        console.log('clientHeight:', clientHeight);
   
-  //       // 判断是否滚动到达底部
-  //       if (e.detail.scrollTop + clientHeight >= scrollHeight-5) {
-  //         this.setData({ isAgreed: true });
-  //         console.log("设置为true");
-  //       } else {
-  //         this.setData({ isAgreed: false });
-  //         console.log("设置为false");
-  //       }
-  //     }
-  //   }).exec();
-  // },
+        // 判断是否滚动到达底部
+        if (e.detail.scrollTop + clientHeight >= scrollHeight-5) {
+          this.setData({ isAgreed: true });
+          console.log("设置为true");
+        } else {
+          this.setData({ isAgreed: false });
+          console.log("设置为false");
+        }
+      }
+    }).exec();
+  },
   
   // 同意之后，遮罩层消失，进行注册步骤
   onAgree:function() {
@@ -161,33 +161,26 @@ Page({
   },
 
   // 点击获取验证码
-  sendVerificationCode:function() {
+  sendVerificationCode: function() {
     const phoneNumber = this.data.user_id;
-    if (this.data.errorMessage_id=='' && phoneNumber!='') {
-      console.log("发送")
-      // 向后端发送获取验证码的请求
-      wx.request({
-        // url: 'https://yunxig.cn/sendCode',  // 你的后端接口地址
-        // url: 'http://192.168.50.225:8080/sendCode',
-        // url: 'http://172.20.10.4:8080/sendCode',
-        url: 'http://1.14.92.141:8080/sendCode',
-        method: 'POST',
-        data: {
-          phoneNumber: phoneNumber,
-          flag: 'register'
-        },
-        success: (res) => {
-          console.log("看", res.data)
-          if(res.data.status==200) {
-            this.startCountdown_code();  // 启动倒计时
-            this.setData({errorMessage_code: ''});
-          } else if (res.data.status==201) {
+    if (this.data.errorMessage_id == '' && phoneNumber != '') {
+      console.log("发送");
+
+      // 调用封装的接口发送验证码
+      api.sendVerificationCode(phoneNumber)
+        .then(res => {
+          if (res.status === 200) {
+            // 验证码发送成功，启动倒计时
+            this.startCountdown_code();
+            this.setData({ errorMessage_code: '' });
+          } else if (res.status === 201) {
+            // 如果手机号已注册，弹出提示框
             wx.showModal({
               title: '重复注册',
               content: '该手机号已经注册过，点击返回登录页面进行登录。',
               showCancel: false, // 不显示取消按钮
               confirmText: '返回登录',
-              success: function (result) {
+              success: function(result) {
                 if (result.confirm) {
                   // 返回登录页面
                   wx.redirectTo({
@@ -196,21 +189,72 @@ Page({
                 }
               }
             });
-          }
-          else {
+          } else {
+            // 其他错误情况
             this.setData({
               errorMessage_code: '验证码发送失败，请稍后再试',
             });
           }
-        },
-        fail: (err) => {
+        })
+        .catch(err => {
+          // 请求失败时显示错误信息
           this.setData({
-            errorMessage_code: '请求失败，请稍后再试'
+            errorMessage_code: '请求失败，请稍后再试',
           });
-        }
-      });
+        });
     }
   },
+
+  // sendVerificationCode:function() {
+  //   const phoneNumber = this.data.user_id;
+  //   if (this.data.errorMessage_id=='' && phoneNumber!='') {
+  //     console.log("发送")
+  //     // 向后端发送获取验证码的请求
+  //     wx.request({
+  //       // url: 'https://yunxig.cn/sendCode',  // 你的后端接口地址
+  //       // url: 'http://192.168.50.225:8080/sendCode',
+  //       // url: 'http://172.20.10.4:8080/sendCode',
+  //       url: 'http://1.14.92.141:8080/sendCode',
+  //       method: 'POST',
+  //       data: {
+  //         phoneNumber: phoneNumber,
+  //         flag: 'register'
+  //       },
+  //       success: (res) => {
+  //         console.log("看", res.data)
+  //         if(res.data.status==200) {
+  //           this.startCountdown_code();  // 启动倒计时
+  //           this.setData({errorMessage_code: ''});
+  //         } else if (res.data.status==201) {
+  //           wx.showModal({
+  //             title: '重复注册',
+  //             content: '该手机号已经注册过，点击返回登录页面进行登录。',
+  //             showCancel: false, // 不显示取消按钮
+  //             confirmText: '返回登录',
+  //             success: function (result) {
+  //               if (result.confirm) {
+  //                 // 返回登录页面
+  //                 wx.redirectTo({
+  //                   url: '/pages/login/login', // 替换为登录页面的实际路径
+  //                 });
+  //               }
+  //             }
+  //           });
+  //         }
+  //         else {
+  //           this.setData({
+  //             errorMessage_code: '验证码发送失败，请稍后再试',
+  //           });
+  //         }
+  //       },
+  //       fail: (err) => {
+  //         this.setData({
+  //           errorMessage_code: '请求失败，请稍后再试'
+  //         });
+  //       }
+  //     });
+  //   }
+  // },
   // 启动倒计时函数
   startCountdown_code() {
     this.setData({
@@ -256,7 +300,7 @@ Page({
     this.setData({ errorMessage: '' });
   
     // 调用 registerUser 函数进行注册请求
-    registerUser(this.data.user_id, this.data.user_password0, this.data.verfication_code)
+    api.registerUser(this.data.user_id, this.data.user_password0, this.data.verfication_code)
       .then((res) => {
         // 处理成功响应
         console.log("Response:", res.data);

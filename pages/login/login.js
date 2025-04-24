@@ -2,7 +2,6 @@
 // 获取应用实例
 var app = getApp()
 const api = require('../../api/api');  // 引入api文件
-const request = require('../../utils/request');  // 引入request文件
 Page({
   /**
    * 页面的初始数据
@@ -29,22 +28,23 @@ Page({
   },
 
   // 获取历史聊天记录------交互接口
-  getHistoryChat: function() {
-    var that = this;
-    api.getHistoryChat({
-      user_name: app.globalData.id,  // 传入用户ID
-    })
-    .then(res => {
-      // 处理成功的结果
-      if (res.status === 200) {
-        app.globalData.chatListData = res.data;  // 将聊天记录存入全局变量
-      }
-    })
-    .catch(err => {
-      // 错误已经在request中处理，不需要再次显示toast
-      console.error('获取聊天记录失败', err);
-    });
-  },
+  // getHistoryChat: function() {
+  //   //var that = this;
+  //   console.log(app.globalData.id);
+  //   api.getHistoryChat({
+  //     user_name: app.globalData.id,  // 传入用户ID
+  //   })
+  //   .then(res => {
+  //     // 处理成功的结果
+  //     if (res.status === 200) {
+  //       app.globalData.chatListData = res.data;  // 将聊天记录存入全局变量
+  //     }
+  //   })
+  //   .catch(err => {
+  //     // 错误已经在request中处理，不需要再次显示toast
+  //     console.error('获取聊天记录失败', err);
+  //   });
+  // },
   // getHistoryChat: function() {
   //   // 从服务器端获取聊天记录
   //   var that = this;
@@ -52,7 +52,8 @@ Page({
   //   wx.request({
   //     // url: 'http://192.168.50.225:8080/getHistoryChat', // 服务器接口地址
   //     // url: 'http://172.20.10.4:8080/getHistoryChat',
-  //     url: 'http://1.14.92.141:8080/getHistoryChat',
+  //     // url: 'http://1.14.92.141:8080/getHistoryChat',
+  //     url: 'http://localhost:5000/getHistoryChat',
   //     method: 'POST',
   //     data: {
   //       user_name: app.globalData.id,
@@ -81,7 +82,6 @@ Page({
   //   });
   // },
 
-
   login: function () {
     const that = this;
     // 获取用户名和密码
@@ -95,6 +95,7 @@ Page({
           const flag = res.success;
           // 存储用户ID
           app.globalData.id = user_name;
+          console.log(typeof(app.globalData.id));
           // 调用获取历史聊天记录接口
           return api.getHistoryChat(app.globalData.id);
         } else if (res.status === 500) {

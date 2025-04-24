@@ -6,6 +6,9 @@ const config = {
 
   // 本地后端1
   base_url: 'http://localhost:5000',
+
+  // 真机调试：需要切换为电脑所在局域网,但最好手机和电脑处于同一局域网下不然很容易超时
+ // base_url: 'http://172.23.38.197:5000',
   // 本地后端2
   // base_url: 'http://localhost:8080',
 

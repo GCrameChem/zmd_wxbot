@@ -3,20 +3,6 @@ const { request } = require('../utils/request'); // 引入request封装的reques
 
 // 定义所有接口的路由
 const api = {
-  // 文本内容检查接口
-  textContentCheck: (data) => {
-    return request({
-      url: '/text_content_check',  // 接口路径
-      method: 'POST',
-      data: data,  // 传入的数据
-      success(res) {
-        console.log('文本安全检测成功：', res);
-      },
-      fail(err) {
-        console.error('文本安全检测失败：', err);
-      },
-    });
-  },
   // 文字对话接口
   textChat: (data) => {
     return request({
@@ -32,11 +18,13 @@ const api = {
     });
   },
   // 获取历史聊天记录接口
-  getHistoryChat: (data) => {
+  getHistoryChat: (user_name) => {
     return request({
       url: '/getHistoryChat',  // 接口路径
       method: 'POST',
-      data: data,  // 传入的数据
+      data: {
+        user_name: user_name
+      }
     });
   },
   // 用户登录接口
