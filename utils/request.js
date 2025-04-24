@@ -1,0 +1,63 @@
+// request.js
+const config = require('../config');  // 引入config文件，获取 base_url 配置
+
+/**
+ * 封装 wx.request 请求
+ * @param {Object} options 请求的配置参数
+ */
+function request(options) {
+  const { url, method = 'GET', data = {}, header = {}, success, fail, complete } = options;
+
+  // 请求的url应该拼接在base_url后
+  const fullUrl = config.base_url + url;
+
+  return new Promise((resolve, reject) => {
+    wx.request({
+      url: fullUrl,
+      method: method,
+      data: data,
+      header: {
+        'content-type': 'application/json; charset=utf-8',
+        ...header,  // 合并传入的header
+      },
+      success(res) {
+        if (res.statusCode === 200) {
+          if (res.data.status === 200) {
+            // 成功回调
+            success && success(res.data);
+            resolve(res.data);
+          } else {
+            // 处理失败状态
+            wx.showToast({
+              title: '请求失败，请稍后重试。',
+              icon: 'none',
+            });
+            reject(res.data);
+          }
+        } else {
+          // 网络错误等
+          wx.showToast({
+            title: '网络请求失败，请检查您的网络。',
+            icon: 'none',
+          });
+          reject(res);
+        }
+      },
+      fail(error) {
+        wx.showToast({
+          title: '请求出错，请稍后再试。',
+          icon: 'none',
+        });
+        fail && fail(error);
+        reject(error);
+      },
+      complete() {
+        complete && complete();
+      },
+    });
+  });
+}
+
+module.exports = {
+  request,
+};

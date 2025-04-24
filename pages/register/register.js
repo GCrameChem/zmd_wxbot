@@ -1,6 +1,7 @@
 // pages/register/register.ts
+const api = require('../../api/api');  // 引入api文件
+const request = require('../../utils/request');  // 引入request文件
 Page({
-
   /**
    * 页面的初始数据
    */
@@ -238,8 +239,9 @@ Page({
   },
 
   // ---点击注册---实现数据库录入、分配相关信息的功能-------
-  register:function() {
+  register: function () {
     const { user_id, user_password0, user_password1, verfication_code, errorMessage_id, errorMessage_password0, errorMessage_password1, errorMessage_code } = this.data;
+  
     // 检查输入是否完成且没有错误
     if (!user_id || !user_password0 || !user_password1 || !verfication_code) {
       this.setData({ errorMessage: '请确保所有输入框都已填写。' });
@@ -249,92 +251,166 @@ Page({
       this.setData({ errorMessage: '信息未正确，无法注册' });
       return;
     }
+  
     // 信息输入正确，能够进行注册
-    this.setData({errorMessage: ''});
-
-    // ---------将身份证号和密码传递给后端，便于录入系统--------注册接口
-    // 后端确认该用户信息是否正确
-    console.log("Sending data:", this.data.user_id, this.data.user_password0);
-    wx.request({
-      // url: 'http://192.168.50.225:8080/register', 
-      // url: 'http://172.20.10.4:8080/register',
-      url: 'http://1.14.92.141:8080/register',
-      // url: 'https://yunxig.cn/register', // 后端接口
-      method: 'POST',
-      data: {
-        user_id: this.data.user_id, // 传递身份证号
-        user_password: this.data.user_password0, // 传递密码
-        user_code: this.data.verfication_code, // 传递验证码
-      },
-      header: {
-        'content-type': 'application/json'
-      },
-      success: function (res) {
+    this.setData({ errorMessage: '' });
+  
+    // 调用 registerUser 函数进行注册请求
+    registerUser(this.data.user_id, this.data.user_password0, this.data.verfication_code)
+      .then((res) => {
         // 处理成功响应
         console.log("Response:", res.data);
-        // 假设后端返回的成功状态为 1---注册成功，0----注册失败，2---已经注册过了
-        if (res.data.status==200) {
-          if (res.data.success==1) {
+        if (res.data.status == 200) {
+          if (res.data.success == 1) {
             wx.showModal({
               title: '注册成功',
               content: '注册已完成，点击返回登录页面。',
-              showCancel: false, // 不显示取消按钮
+              showCancel: false,
               confirmText: '返回登录',
               success: function (result) {
                 if (result.confirm) {
                   // 返回登录页面
                   wx.redirectTo({
-                    url: '/pages/login/login', // 替换为登录页面的实际路径
+                    url: '/pages/login/login',
                   });
                 }
               }
             });
-          } else if (res.data.success==2) {
+          } else if (res.data.success == 2) {
             wx.showModal({
               title: '重复注册',
               content: '该手机号已经注册过，点击返回登录页面进行登录。',
-              showCancel: false, // 不显示取消按钮
+              showCancel: false,
               confirmText: '返回登录',
               success: function (result) {
                 if (result.confirm) {
-                  // 返回登录页面
                   wx.redirectTo({
-                    url: '/pages/login/login', // 替换为登录页面的实际路径
+                    url: '/pages/login/login',
                   });
                 }
               }
             });
-          } else if (res.data.success==3) {
+          } else if (res.data.success == 3) {
             wx.showToast({
               title: '验证码已过期，请重试',
               icon: 'none',
             });
-          } else if(res.data.success==4) {
+          } else if (res.data.success == 4) {
             wx.showToast({
               title: '验证码错误，请稍后重试',
               icon: 'none',
             });
           }
-        }
-        else {
-          // 处理注册失败的情况
+        } else {
+          // 注册失败
           wx.showToast({
             title: '注册失败，请重试',
             icon: 'none',
           });
         }
-      },
-      // 前端未能成功与后端建立了联系的报错
-      fail: function (error) {
+      })
+      .catch((error) => {
         // 处理错误
         console.error("Request failed:", error);
-        wx.showToast({
-          title: '请求失败，请检查网络或稍后再试',
-          icon: 'none',
-        });
-      }
-    });
+      });
   },
+  // register:function() {
+  //   const { user_id, user_password0, user_password1, verfication_code, errorMessage_id, errorMessage_password0, errorMessage_password1, errorMessage_code } = this.data;
+  //   // 检查输入是否完成且没有错误
+  //   if (!user_id || !user_password0 || !user_password1 || !verfication_code) {
+  //     this.setData({ errorMessage: '请确保所有输入框都已填写。' });
+  //     return;
+  //   }
+  //   if (errorMessage_id || errorMessage_password0 || errorMessage_password1 || errorMessage_code) {
+  //     this.setData({ errorMessage: '信息未正确，无法注册' });
+  //     return;
+  //   }
+  //   // 信息输入正确，能够进行注册
+  //   this.setData({errorMessage: ''});
+
+  //   // ---------将身份证号和密码传递给后端，便于录入系统--------注册接口
+  //   // 后端确认该用户信息是否正确
+  //   console.log("Sending data:", this.data.user_id, this.data.user_password0);
+  //   wx.request({
+  //     // url: 'http://192.168.50.225:8080/register', 
+  //     // url: 'http://172.20.10.4:8080/register',
+  //     url: 'http://1.14.92.141:8080/register',
+  //     // url: 'https://yunxig.cn/register', // 后端接口
+  //     method: 'POST',
+  //     data: {
+  //       user_id: this.data.user_id, // 传递身份证号
+  //       user_password: this.data.user_password0, // 传递密码
+  //       user_code: this.data.verfication_code, // 传递验证码
+  //     },
+  //     header: {
+  //       'content-type': 'application/json'
+  //     },
+  //     success: function (res) {
+  //       // 处理成功响应
+  //       console.log("Response:", res.data);
+  //       // 假设后端返回的成功状态为 1---注册成功，0----注册失败，2---已经注册过了
+  //       if (res.data.status==200) {
+  //         if (res.data.success==1) {
+  //           wx.showModal({
+  //             title: '注册成功',
+  //             content: '注册已完成，点击返回登录页面。',
+  //             showCancel: false, // 不显示取消按钮
+  //             confirmText: '返回登录',
+  //             success: function (result) {
+  //               if (result.confirm) {
+  //                 // 返回登录页面
+  //                 wx.redirectTo({
+  //                   url: '/pages/login/login', // 替换为登录页面的实际路径
+  //                 });
+  //               }
+  //             }
+  //           });
+  //         } else if (res.data.success==2) {
+  //           wx.showModal({
+  //             title: '重复注册',
+  //             content: '该手机号已经注册过，点击返回登录页面进行登录。',
+  //             showCancel: false, // 不显示取消按钮
+  //             confirmText: '返回登录',
+  //             success: function (result) {
+  //               if (result.confirm) {
+  //                 // 返回登录页面
+  //                 wx.redirectTo({
+  //                   url: '/pages/login/login', // 替换为登录页面的实际路径
+  //                 });
+  //               }
+  //             }
+  //           });
+  //         } else if (res.data.success==3) {
+  //           wx.showToast({
+  //             title: '验证码已过期，请重试',
+  //             icon: 'none',
+  //           });
+  //         } else if(res.data.success==4) {
+  //           wx.showToast({
+  //             title: '验证码错误，请稍后重试',
+  //             icon: 'none',
+  //           });
+  //         }
+  //       }
+  //       else {
+  //         // 处理注册失败的情况
+  //         wx.showToast({
+  //           title: '注册失败，请重试',
+  //           icon: 'none',
+  //         });
+  //       }
+  //     },
+  //     // 前端未能成功与后端建立了联系的报错
+  //     fail: function (error) {
+  //       // 处理错误
+  //       console.error("Request failed:", error);
+  //       wx.showToast({
+  //         title: '请求失败，请检查网络或稍后再试',
+  //         icon: 'none',
+  //       });
+  //     }
+  //   });
+  // },
   // 点击返回
   return:function() {
     // 返回登录页面

@@ -1,3 +1,5 @@
+const api = require('../../api/api');  // 引入api文件
+const request = require('../../utils/request');  // 引入request文件
 
 // 当前页面对象
 let MyPage;
@@ -175,158 +177,267 @@ Page({
 
   // 对话方式一 —— 文字版-----发送文字，并将文字发送到后台处理
   sendChat: function () {
-    // 放置作用域改变
-    that = this;
-    if(that.data.isWaitReply) {
-      return
+    const that = this;
+    if (that.data.isWaitReply) {
+      return;
     }
-    let word = that.data.askWord; // 等于输入框中的文字内容
-    if(word.length==0 || word==null){ // 检查用户输入内容是否为空
-      return
+
+    const word = that.data.askWord; // 等于输入框中的文字内容
+    if (word.length === 0 || word === null) { // 检查用户输入内容是否为空
+      return;
     }
+
     that.data.isWaitReply = true; // 标记为正在等待回复，前端不会再次触发发送请求
     that.addChatWithFlag('text', word, null, 0, 'user', false, true); // 增加内容，显示用户消息
+
     that.setData({
       askWord: '',
-      sendButtDisable: true,  // 在消息发送过程中，禁用发送按钮，防止用户连续点击
+      sendButtDisable: true, // 在消息发送过程中，禁用发送按钮，防止用户连续点击
     });
-    // 获取jscode
+
+    // 获取 jscode
     wx.login({
-      success: (res)=> { 
-        if(res.code) {
-          // 通过wx.login获取到jscode，即临时登录凭证，后端通过jscode验证用户身份
-          console.log("获取到jscode：", res.code);
+      success: (res) => {
+        if (res.code) {
+          // 通过 wx.login 获取到 jscode，即临时登录凭证，后端通过 jscode 验证用户身份
+          console.log("获取到 jscode：", res.code);
           that.setData({
             jscode: res.code,
           });
-          // 文字输入
-          // ------文本安全检测-------
-          wx.request({
-            // url: 'https://yunxig.cn/text_content_check',
-            // url: 'http://192.168.50.225:8080/text_content_check',
-            // url: 'http://172.20.10.4:8080/text_content_check',
-            url: 'http://1.14.92.141:8080/text_content_check',
-            method: "POST",
-            data: JSON.stringify({  // 确保将数据序列化为 JSON 字符串
-              text: word,
-              jscode: res.code,
-            }), // 向后端发送第一条请求，对输入的文本内容进行安全检测
-            header: {
-              'content-type': 'application/json; charset=utf-8'
-            },
-            
-            success:function(res) {
-              console.log("文本检测的信息res.data.status = ",res.data.status)
-              // 文本内容合法
-              if(res.data.status===200) { //hongze modified === to ==
-                // ----------------文字对话接口-----------------
-                wx.request({
-                    // url: "https://yunxig.cn/textchat", // 后端地址
-                    // url: "http://192.168.50.225:8080/textchat",
-                    // url: "http://172.20.10.4:8080/textchat",
-                    url: "http://1.14.92.141:8080/textchat",
-                    method: "POST",
-                    data: {
-                      user_name: chatapp.globalData.id,
-                      text: word,
-                      jscode: that.data.jscode, //hongze add, or res.code
-                    },
-                    header: {
-                      'content-type': 'application/json; charset=utf-8' // 请求头json格式, hongze add ; charset=utf-8
-                    },// 若文本内容合法，向后端发送第二条请求，即文本聊天交互。
-                  success: function (res) {
-                    console.log(res.data.data)
-                    // -----------------正常对话过程-----------
-                    if(res.data.status==200) {
-                      // 增加对话内容
-                      that.addChatWithFlag('text', res.data.data, 0, null, "assistant", false, true)
-                    } 
-                    // ------------------达到当天对话上限，对话将要结束---------
-                    else if (res.data.status==201) {
-                      // 增加对话内容
-                      that.addChatWithFlag('text', res.data.data, 0, null, "assistant", false, true)
-                      // 强制退出设置
-                      that.handleEndOfConversation();
-                    }
-                    // ----------------其他异常情况-------
-                    else {
-                      console.log("文字上传成功但出错")
-                      console.log('status = ', res.data.status); // hongze add
-                      wx.showModal({
-                        title: '提示',
-                        content: '文字上传失败，请稍后重新输入1。', // 当文本安全检测接口请求失败时触发
-                        showCancel: false,
-                        success: function (res) {
-                          if (res.confirm) {
-                            // 用户点击确认后执行
-                            that.removeLastChat();
-                          }
-                        }
-                      });
-                    }
-                  },
-                  fail: function (res) {
-                    wx.showModal({
-                      title: '提示',
-                      content: '文字上传失败，请稍后重新输入2。',
-                      showCancel: false,
-                      success: function (res) {
-                        if (res.confirm) {
-                          // 用户点击确认后执行
-                          that.removeLastChat();
-                        }
+
+          // 使用 request.js 来调用文本安全检测
+          checkContentSafety(word, res.code).then((res) => {
+            console.log("文本检测的信息 res.data.status = ", res.data.status);
+            if (res.data.status === 200) {
+              // 文本内容合法，继续聊天
+              sendTextChat(chatapp.globalData.id, word, that.data.jscode).then((res) => {
+                console.log(res.data.data);
+                if (res.data.status === 200) {
+                  // 正常对话过程
+                  that.addChatWithFlag('text', res.data.data, 0, null, "assistant", false, true);
+                } else if (res.data.status === 201) {
+                  // 达到当天对话上限，对话将要结束
+                  that.addChatWithFlag('text', res.data.data, 0, null, "assistant", false, true);
+                  that.handleEndOfConversation();
+                } else {
+                  // 其他异常情况
+                  console.log("文字上传成功但出错");
+                  console.log('status = ', res.data.status); // 打印 status
+                  wx.showModal({
+                    title: '提示',
+                    content: '文字上传失败，请稍后重新输入1。',
+                    showCancel: false,
+                    success: function (res) {
+                      if (res.confirm) {
+                        that.removeLastChat();
                       }
-                    });
-                  }
-                })
-              }
-              // 内容不合法
-              else {
-                // 提示用户输入不合法，需要重新输入
-                wx.showToast({
-                  title: '输入内容不合法',
-                });
-                // 删除小程序上有关内容
-                that.removeLastChat();
-              }  
-            },
-            fail:function() {
-              console.log("安全检测接口出错")
-              wx.showModal({
-                title: '提示',
-                content: '文字上传失败，请稍后重新输入3。', // 当 文字上传到后端进行对话请求 失败时触发。
-                showCancel: false,
-                success: function (res) {
-                  if (res.confirm) {
-                    // 用户点击确认后执行
-                    that.removeLastChat();
-                  }
+                    }
+                  });
                 }
+              }).catch(() => {
+                wx.showModal({
+                  title: '提示',
+                  content: '文字上传失败，请稍后重新输入2。',
+                  showCancel: false,
+                  success: function (res) {
+                    if (res.confirm) {
+                      that.removeLastChat();
+                    }
+                  }
+                });
               });
-            },
-            complete: function() {
-              that.data.isWaitReply = false;
+            } else {
+              // 内容不合法
+              wx.showToast({
+                title: '输入内容不合法',
+              });
+              that.removeLastChat();
             }
+          }).catch(() => {
+            wx.showModal({
+              title: '提示',
+              content: '文字上传失败，请稍后重新输入3。',
+              showCancel: false,
+              success: function (res) {
+                if (res.confirm) {
+                  that.removeLastChat();
+                }
+              }
+            });
           });
-        }
-        else {
+        } else {
           // 提示用户有问题
           wx.showToast({
             title: '网络请求失败，请稍后重试',
             icon: 'none'
-          })
+          });
         }
-      }, 
-      fail:function (err) {
-        console.error('wx.login调用失败', err);
+      },
+      fail: function (err) {
+        console.error('wx.login 调用失败', err);
         // 提示用户有问题
         wx.showToast({
           title: '网络请求失败，请稍后重试',
           icon: 'none'
-        })
+        });
       }
-    })
+    });
   },
+  // sendChat: function () {
+  //   // 放置作用域改变
+  //   that = this;
+  //   if(that.data.isWaitReply) {
+  //     return
+  //   }
+  //   let word = that.data.askWord; // 等于输入框中的文字内容
+  //   if(word.length==0 || word==null){ // 检查用户输入内容是否为空
+  //     return
+  //   }
+  //   that.data.isWaitReply = true; // 标记为正在等待回复，前端不会再次触发发送请求
+  //   that.addChatWithFlag('text', word, null, 0, 'user', false, true); // 增加内容，显示用户消息
+  //   that.setData({
+  //     askWord: '',
+  //     sendButtDisable: true,  // 在消息发送过程中，禁用发送按钮，防止用户连续点击
+  //   });
+  //   // 获取jscode
+  //   wx.login({
+  //     success: (res)=> { 
+  //       if(res.code) {
+  //         // 通过wx.login获取到jscode，即临时登录凭证，后端通过jscode验证用户身份
+  //         console.log("获取到jscode：", res.code);
+  //         that.setData({
+  //           jscode: res.code,
+  //         });
+  //         // 文字输入
+  //         // ------文本安全检测-------
+  //         wx.request({
+  //           // url: 'https://yunxig.cn/text_content_check',
+  //           // url: 'http://192.168.50.225:8080/text_content_check',
+  //           // url: 'http://172.20.10.4:8080/text_content_check',
+  //           url: 'http://1.14.92.141:8080/text_content_check',
+  //           method: "POST",
+  //           data: JSON.stringify({  // 确保将数据序列化为 JSON 字符串
+  //             text: word,
+  //             jscode: res.code,
+  //           }), // 向后端发送第一条请求，对输入的文本内容进行安全检测
+  //           header: {
+  //             'content-type': 'application/json; charset=utf-8'
+  //           },
+            
+  //           success:function(res) {
+  //             console.log("文本检测的信息res.data.status = ",res.data.status)
+  //             // 文本内容合法
+  //             if(res.data.status===200) { //hongze modified === to ==
+  //               // ----------------文字对话接口-----------------
+
+  //               wx.request({
+  //                   // url: "https://yunxig.cn/textchat", // 后端地址
+  //                   // url: "http://192.168.50.225:8080/textchat",
+  //                   // url: "http://172.20.10.4:8080/textchat",
+  //                   url: "http://1.14.92.141:8080/textchat",
+  //                   method: "POST",
+  //                   data: {
+  //                     user_name: chatapp.globalData.id,
+  //                     text: word,
+  //                     jscode: that.data.jscode, //hongze add, or res.code
+  //                   },
+  //                   header: {
+  //                     'content-type': 'application/json; charset=utf-8' // 请求头json格式, hongze add ; charset=utf-8
+  //                   },// 若文本内容合法，向后端发送第二条请求，即文本聊天交互。
+  //                 success: function (res) {
+  //                   console.log(res.data.data)
+  //                   // -----------------正常对话过程-----------
+  //                   if(res.data.status==200) {
+  //                     // 增加对话内容
+  //                     that.addChatWithFlag('text', res.data.data, 0, null, "assistant", false, true)
+  //                   } 
+  //                   // ------------------达到当天对话上限，对话将要结束---------
+  //                   else if (res.data.status==201) {
+  //                     // 增加对话内容
+  //                     that.addChatWithFlag('text', res.data.data, 0, null, "assistant", false, true)
+  //                     // 强制退出设置
+  //                     that.handleEndOfConversation();
+  //                   }
+  //                   // ----------------其他异常情况-------
+  //                   else {
+  //                     console.log("文字上传成功但出错")
+  //                     console.log('status = ', res.data.status); // hongze add
+  //                     wx.showModal({
+  //                       title: '提示',
+  //                       content: '文字上传失败，请稍后重新输入1。', // 当文本安全检测接口请求失败时触发
+  //                       showCancel: false,
+  //                       success: function (res) {
+  //                         if (res.confirm) {
+  //                           // 用户点击确认后执行
+  //                           that.removeLastChat();
+  //                         }
+  //                       }
+  //                     });
+  //                   }
+  //                 },
+  //                 fail: function (res) {
+  //                   wx.showModal({
+  //                     title: '提示',
+  //                     content: '文字上传失败，请稍后重新输入2。',
+  //                     showCancel: false,
+  //                     success: function (res) {
+  //                       if (res.confirm) {
+  //                         // 用户点击确认后执行
+  //                         that.removeLastChat();
+  //                       }
+  //                     }
+  //                   });
+  //                 }
+  //               })
+  //             }
+  //             // 内容不合法
+  //             else {
+  //               // 提示用户输入不合法，需要重新输入
+  //               wx.showToast({
+  //                 title: '输入内容不合法',
+  //               });
+  //               // 删除小程序上有关内容
+  //               that.removeLastChat();
+  //             }  
+  //           },
+  //           fail:function() {
+  //             console.log("安全检测接口出错")
+  //             wx.showModal({
+  //               title: '提示',
+  //               content: '文字上传失败，请稍后重新输入3。', // 当 文字上传到后端进行对话请求 失败时触发。
+  //               showCancel: false,
+  //               success: function (res) {
+  //                 if (res.confirm) {
+  //                   // 用户点击确认后执行
+  //                   that.removeLastChat();
+  //                 }
+  //               }
+  //             });
+  //           },
+  //           complete: function() {
+  //             that.data.isWaitReply = false;
+  //           }
+  //         });
+  //       }
+  //       else {
+  //         // 提示用户有问题
+  //         wx.showToast({
+  //           title: '网络请求失败，请稍后重试',
+  //           icon: 'none'
+  //         })
+  //       }
+  //     }, 
+  //     fail:function (err) {
+  //       console.error('wx.login调用失败', err);
+  //       // 提示用户有问题
+  //       wx.showToast({
+  //         title: '网络请求失败，请稍后重试',
+  //         icon: 'none'
+  //       })
+  //     }
+  //   })
+
+  // },
 
   // 对话录音开始功能 —— 按下录音按钮
   touchdown: function (e) {

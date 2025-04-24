@@ -1,6 +1,10 @@
 {
 	"compilerOptions": {
 		"target": "es2015",
-		"module": "commonjs"
-	}	
+    "module": "commonjs",
+    "baseUrl": ".", // 设置根目录
+    "paths": {
+      "@/*": ["./*"] // 将 "@" 映射到项目根目录
+    }
+  }	
 }
