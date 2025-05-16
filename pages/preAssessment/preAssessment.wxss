@@ -1,0 +1,76 @@
+/* pages/preAssessment/preAssessment.wxss */
+.container {
+  padding: 24rpx;
+  margin-top: 170rpx;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+.user-summary {
+  margin-bottom: 30rpx;
+  padding: 20rpx;
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 8rpx rgba(0,0,0,0.05);
+}
+
+.user-name,
+.total-score,
+.evaluation {
+  display: block;
+  font-size: 30rpx;
+  margin-bottom: 12rpx;
+  color: #333;
+}
+.modified {
+  display: block;
+  font-size: 30rpx;
+  margin-bottom: 12rpx;
+  right: 20rpx;
+  color: #333;
+}
+
+.divider {
+  height: 2rpx;
+  background-color: #ddd;
+  margin: 20rpx 0;
+}
+
+.scale-section {
+  margin: 32rpx 0;
+  padding: 24rpx;
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+.scale-title {
+  font-weight: bold;
+  font-size: 28rpx;
+  margin-bottom: 16rpx;
+  color: #333;
+}
+
+.table-header,
+.table-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12rpx 0;
+  border-bottom: 1rpx solid #eee;
+}
+
+.col-title,
+.col-score,
+.col-level {
+  flex: 1;
+  text-align: center;
+  font-size: 24rpx;
+}
+
+
+.table-header,
+.table-row {
+  display: flex;
+  padding: 10rpx 0;
+  border-bottom: 1rpx solid #eee;
+}

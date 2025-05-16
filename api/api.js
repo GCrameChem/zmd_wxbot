@@ -27,6 +27,47 @@ const api = {
       }
     });
   },
+
+  // 评估更新信号（值为 0/1）
+  checkEvaluationSignal: (user_name) => {
+    return request({
+      url: '/checkEvaluationSignal',
+      method: 'POST',
+      data: { user_name }
+    });
+  },
+
+  // 初步评估页面
+  getAssessmentData: (user_name) => {
+    return request({
+      url: '/getAssessmentData',
+      method: 'POST',
+      data: {
+        user_name: user_name
+      }
+    });
+  },
+  
+
+  // 获取总结弹窗
+  getPopupAdvice: (user_name) => {
+    return request({
+      url: '/getPopupAdvice',
+      method: 'POST',
+      data: { user_name }
+    });
+  },
+  
+
+  // 获取评估总览内容（跳转页用：分数、量表、总评估等）
+  getEvaluationOverview: (user_name) => {
+    return request({
+      url: '/getEvaluationOverview',
+      method: 'POST',
+      data: { user_name }
+    });
+  },
+
   // 用户登录接口
   login: (user_name, user_password) => {
     return request({

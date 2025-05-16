@@ -1,6 +1,4 @@
 const api = require('../../api/api');  // 引入api文件
-const request = require('../../utils/request');  // 引入request文件
-
 // 当前页面对象
 let MyPage;
 var chatListData = [];
@@ -13,6 +11,16 @@ Page({
    * 页面的初始数据
    */
   data: {
+    // 弹窗控制
+    userName: chatapp.globalData.id,
+    showStripPopup: false,
+    showEvalButton: false,
+    hasRedDot: false,
+    popupData: {
+      keywords: '',
+      problem: '',
+      advice: ''
+    },
     isWaitReply: false,
     recordStatus: false,
     innerAudioContext: null, // 录音播放器
@@ -41,11 +49,36 @@ Page({
     this.setData({
       chatList: chatListData,
       scrolltop: "roll" + charlenght,
+      showStripPopup: false,
+      showEvalButton: true,
+      hasRedDot: false
     });
     // 页面加载时初始化录音管理器
     this.initRecord();
     // 页面加载时初始化播放器
     this.initAudio();
+  },
+  
+  onShow() {
+    this.startPolling();
+  },
+  
+  startPolling() {
+    this.pollingInterval = setInterval(() => {
+      const userName = getApp().globalData.id;
+      api.checkEvaluationSignal(userName).then(res => {
+        if (res.signal === 1) {
+          this.setData({
+            showEvalButton: true,
+            hasRedDot: true
+          });
+        }
+      });
+    }, 10000); // 每 10 秒轮询一次
+  },
+  
+  onHide() {
+    clearInterval(this.pollingInterval);
   },
   
   //初始化录音管理器---主要设置了onstop函数
@@ -134,6 +167,26 @@ Page({
     });
   },
 
+  // 检查信号并显示条状弹窗
+  checkPopupSignal(userName) {
+  },
+
+  // 跳转初步评估页
+  navigateToPreAssessment() {
+    this.setData({ hasRedDot: false });
+    wx.navigateTo({
+      url: '/pages/preAssessment/preAssessment'
+    });
+  },
+
+  // 跳转弹窗详情页（可共用初步评估页）
+  navigateToSummary() {
+    wx.navigateTo({
+      url: '/pages/chatSummary/chatSummary'
+    });
+  },
+
+  
   // 当天对话结束的强制退出功能
   handleEndOfConversation: function() {
     let countdownTime = this.data.countdown; // 使用一个局部变量来保存倒计时秒数

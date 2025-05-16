@@ -3,7 +3,8 @@
     "pages/login/login",
     "pages/register/register",
     "pages/chat/chat",
-    "pages/change/change"
+    "pages/change/change",
+    "pages/preAssessment/preAssessment"
   ],
   "window": {
     "navigationStyle": "custom",

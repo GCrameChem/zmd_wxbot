@@ -5,6 +5,7 @@ App({
     id: null,
     chatListData: [],
     isTrans: true,
+    hasNewEvaluation: false // 标志：是否有新的评估数据
   },
 
   /**

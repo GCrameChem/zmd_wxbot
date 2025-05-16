@@ -12,7 +12,32 @@ page {
   height: 100%;
   z-index: -1; /* 将图片放在最底层 */
 }
+.strip-popup {
+  position: fixed;
+  bottom: 100rpx;
+  left: 5%;
+  width: 90%;
+  background-color: #fff8f0;
+  border: 1rpx solid #f0c090;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
 
+.popup-title {
+  font-weight: bold;
+  margin-bottom: 12rpx;
+  font-size: 28rpx;
+  color: #ff6600;
+}
+
+.popup-content text {
+  display: block;
+  font-size: 26rpx;
+  color: #333;
+  margin-top: 6rpx;
+}
 
 .container {
   overflow: hidden;
@@ -31,6 +56,33 @@ page {
   overflow-y: auto;
   /* flex-wrap: wrap; */
   padding: 15rpx 15rpx;
+}
+
+.eval-button-wrapper {
+  position: fixed;
+  bottom: 150rpx;
+  left: 20rpx;
+  z-index: 1000;
+}
+
+.eval-button {
+  position: relative;
+  background-color: #007aff;
+  color: white;
+  border-radius: 50rpx;
+  padding: 20rpx 40rpx;
+  font-size: 28rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2);
+}
+
+.red-dot {
+  width: 16rpx;
+  height: 16rpx;
+  background-color: red;
+  border-radius: 50%;
+  position: absolute;
+  top: -10rpx;
+  right: -10rpx;
 }
 
 .chat-list {
