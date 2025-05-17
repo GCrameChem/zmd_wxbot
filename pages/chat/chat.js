@@ -13,9 +13,11 @@ Page({
   data: {
     // 弹窗控制
     userName: chatapp.globalData.id,
-    showStripPopup: false,
-    showEvalButton: false,
+    showEvalButton: false,  // 初步评估 
+    showSummaryButton: true,  // 阶段评估
     hasRedDot: false,
+    showSummaryBanner: false,  // 是否显示横条弹窗
+    summarySignal: false,       // 来自后端或逻辑判断的信号
     popupData: {
       keywords: '',
       problem: '',
@@ -49,7 +51,6 @@ Page({
     this.setData({
       chatList: chatListData,
       scrolltop: "roll" + charlenght,
-      showStripPopup: false,
       showEvalButton: true,
       hasRedDot: false
     });
@@ -60,21 +61,20 @@ Page({
   },
   
   onShow() {
-    this.startPolling();
-  },
-  
-  startPolling() {
-    this.pollingInterval = setInterval(() => {
-      const userName = getApp().globalData.id;
-      api.checkEvaluationSignal(userName).then(res => {
-        if (res.signal === 1) {
-          this.setData({
-            showEvalButton: true,
-            hasRedDot: true
-          });
-        }
-      });
-    }, 10000); // 每 10 秒轮询一次
+    // TEMP
+    api.checkAllUpdateSignals(userName).then(res => {
+      if (res.data.evaluate === 1) {
+        this.setData({
+          showEvalButton: true,
+          hasRedDot: true
+        });
+      }
+      if (res.data.summary === 1) {
+        this.setData({
+          showSummaryButton: true
+        });
+      }
+    });
   },
   
   onHide() {
@@ -167,22 +167,23 @@ Page({
     });
   },
 
-  // 检查信号并显示条状弹窗
-  checkPopupSignal(userName) {
-  },
 
   // 跳转初步评估页
   navigateToPreAssessment() {
     this.setData({ hasRedDot: false });
+    api.confirmEvaluateSignal(this.userName);
     wx.navigateTo({
       url: '/pages/preAssessment/preAssessment'
     });
   },
 
-  // 跳转弹窗详情页（可共用初步评估页）
-  navigateToSummary() {
+  goToSummaryPage() {
+    this.setData({
+      showSummaryButton: true,
+    });
+    api.confirmSummarySignal(this.userName);
     wx.navigateTo({
-      url: '/pages/chatSummary/chatSummary'
+      url: '/pages/summaryReport/summaryReport'
     });
   },
 

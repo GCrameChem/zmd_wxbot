@@ -28,15 +28,32 @@ const api = {
     });
   },
 
-  // 评估更新信号（值为 0/1）
-  checkEvaluationSignal: (user_name) => {
+  // 查询更新（信号值为 0/1）
+  checkAllUpdateSignals: (user_name) => {
     return request({
-      url: '/checkEvaluationSignal',
+      url: '/checkAllUpdateSignals',
+      method: 'POST',
+      data: { user_name }
+    });
+  },
+  // 已读初步评估更新信号（信号值为 0/1）
+  confirmEvaluateSignal: (user_name) => {
+    return request({
+      url: '/confirmEvaluateSignal',
+      method: 'POST',
+      data: { user_name }
+    });
+  },
+  // 已读阶段总结更新信号（信号值为 0/1）
+  confirmSummarySignal: (user_name) => {
+    return request({
+      url: '/confirmSummarySignal',
       method: 'POST',
       data: { user_name }
     });
   },
 
+  
   // 初步评估页面
   getAssessmentData: (user_name) => {
     return request({
@@ -48,21 +65,10 @@ const api = {
     });
   },
   
-
-  // 获取总结弹窗
-  getPopupAdvice: (user_name) => {
+  // 获取总结页面内容
+  getSummaryReport: (user_name) => {
     return request({
-      url: '/getPopupAdvice',
-      method: 'POST',
-      data: { user_name }
-    });
-  },
-  
-
-  // 获取评估总览内容（跳转页用：分数、量表、总评估等）
-  getEvaluationOverview: (user_name) => {
-    return request({
-      url: '/getEvaluationOverview',
+      url: '/getSummaryReport',
       method: 'POST',
       data: { user_name }
     });

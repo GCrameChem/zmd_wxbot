@@ -4,7 +4,8 @@
     "pages/register/register",
     "pages/chat/chat",
     "pages/change/change",
-    "pages/preAssessment/preAssessment"
+    "pages/preAssessment/preAssessment",
+    "pages/summaryReport/summaryReport"
   ],
   "window": {
     "navigationStyle": "custom",

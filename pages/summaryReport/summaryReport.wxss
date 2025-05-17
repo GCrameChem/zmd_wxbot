@@ -1,0 +1,43 @@
+.summary-container {
+  padding: 150rpx 30rpx 30rpx; /* 增大顶部内边距以下移整体内容 */
+  font-size: 30rpx;
+}
+
+.section {
+  margin-bottom: 60rpx; /* 保持各部分间距 */
+}
+
+.main_title {
+  font-weight: bold;
+  font-size: 50rpx;
+  text-align: center;       /* 水平居中 */
+  margin-bottom: 30rpx;     /* 标题下方间距 */
+  display: block;
+}
+
+.divider {
+  height: 2rpx;
+  background-color: #ddd;
+  margin: 20rpx 0;
+}
+
+.title {
+  margin-bottom: 150rpx;
+  font-weight: bold;
+  font-size: 34rpx;
+  margin-bottom: 50rpx;
+  display: block;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tag {
+  background-color: #e6f7ff;
+  border-radius: 20rpx;
+  padding: 10rpx 20rpx;
+  margin: 6rpx;
+  font-size: 28rpx;
+}

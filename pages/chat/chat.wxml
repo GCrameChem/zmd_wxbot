@@ -1,16 +1,11 @@
 <!--pages/chat/chat.wxml-->
 <custom-nav title="EmoMind"></custom-nav>
 <image class="background-image" src="cloud://env-6gwdgqfkc232ef67.656e-env-6gwdgqfkc232ef67-1338470007/bg4.png" mode="aspectFill"></image>
-<view class="container">
-  <!-- 总结条状弹窗 -->
-  <view wx:if="{{showStripPopup}}" class="strip-popup" bindtap="navigateToSummary">
-    <text class="popup-title">心理对话总结：</text>
-    <view class="popup-content">
-      <text>话题关键词：{{popupData.keywords}}</text>
-      <text>问题表现：{{popupData.problem}}</text>
-      <text>建议：{{popupData.advice}}</text>
-    </view>
+<!-- 总结条状弹窗 -->
+<view wx:if="{{showSummaryBanner}}" class="summary-banner" bindtap="goToSummaryPage">
+    <text>👉 最新阶段总结新鲜出炉！点击领取~</text>
   </view>
+<view class="container">
   <view class="chat-container">
     <!-- 聊天显示部分 -->
     <scroll-view class="scrool-view" scroll-y="true" scroll-with-animation="true" scroll-into-view="{{scrolltop}}" enable-back-to-top="true">
@@ -86,7 +81,12 @@
         初步评估
         <view wx:if="{{hasRedDot}}" class="red-dot"></view>
       </button>
-    </view>
+  </view>
+  <!-- 阶段评估按钮 -->
+  <view wx:if="{{showSummaryButton}}" class="summary-button-wrapper">
+      <button class="summary-button" bindtap="goToSummaryPage">
+        阶段评估报告</button>
+  </view>
   <!-- 输入按键部分 -->
   <view class="ask-input-container">
     <!-- 语音/文本输入标识 -->
