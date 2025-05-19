@@ -62,7 +62,7 @@ Page({
   
   onShow() {
     // TEMP
-    api.checkAllUpdateSignals(userName).then(res => {
+    api.checkAllUpdateSignals(this.data.userName).then(res => {
       if (res.data.evaluate === 1) {
         this.setData({
           showEvalButton: true,
@@ -171,7 +171,7 @@ Page({
   // 跳转初步评估页
   navigateToPreAssessment() {
     this.setData({ hasRedDot: false });
-    api.confirmEvaluateSignal(this.userName);
+    api.confirmEvaluateSignal(this.data.userName);
     wx.navigateTo({
       url: '/pages/preAssessment/preAssessment'
     });
@@ -181,7 +181,7 @@ Page({
     this.setData({
       showSummaryButton: true,
     });
-    api.confirmSummarySignal(this.userName);
+    api.confirmSummarySignal(this.data.userName);
     wx.navigateTo({
       url: '/pages/summaryReport/summaryReport'
     });
@@ -261,22 +261,23 @@ Page({
 
           // 使用 request.js 来调用文本安全检测
           api.checkContentSafety(word, res.code).then((res) => {
-            console.log("文本检测的信息 res.data.status = ", res.data.status);
-            if (res.data.status === 200) {
+            console.log("文本检测的信息 res.status = ", res.status);
+            if (res.status === 200) {
+              console.log("checkContentSafety=200");
               // 文本内容合法，继续聊天
               api.sendTextChat(chatapp.globalData.id, word, that.data.jscode).then((res) => {
                 console.log(res.data.data);
-                if (res.data.status === 200) {
+                if (res.status === 200) {
                   // 正常对话过程
                   that.addChatWithFlag('text', res.data.data, 0, null, "assistant", false, true);
-                } else if (res.data.status === 201) {
+                } else if (res.status === 201) {
                   // 达到当天对话上限，对话将要结束
                   that.addChatWithFlag('text', res.data.data, 0, null, "assistant", false, true);
                   that.handleEndOfConversation();
                 } else {
                   // 其他异常情况
                   console.log("文字上传成功但出错");
-                  console.log('status = ', res.data.status); // 打印 status
+                  console.log('status = ', res.status); // 打印 status
                   wx.showModal({
                     title: '提示',
                     content: '文字上传失败，请稍后重新输入1。',
@@ -307,7 +308,8 @@ Page({
               });
               that.removeLastChat();
             }
-          }).catch(() => {
+          })
+          .catch(() => {
             wx.showModal({
               title: '提示',
               content: '文字上传失败，请稍后重新输入3。',
@@ -379,9 +381,9 @@ Page({
   //           },
             
   //           success:function(res) {
-  //             console.log("文本检测的信息res.data.status = ",res.data.status)
+  //             console.log("文本检测的信息res.status = ",res.status)
   //             // 文本内容合法
-  //             if(res.data.status===200) { //hongze modified === to ==
+  //             if(res.status===200) { //hongze modified === to ==
   //               // ----------------文字对话接口-----------------
 
   //               wx.request({
@@ -401,12 +403,12 @@ Page({
   //                 success: function (res) {
   //                   console.log(res.data.data)
   //                   // -----------------正常对话过程-----------
-  //                   if(res.data.status==200) {
+  //                   if(res.status==200) {
   //                     // 增加对话内容
   //                     that.addChatWithFlag('text', res.data.data, 0, null, "assistant", false, true)
   //                   } 
   //                   // ------------------达到当天对话上限，对话将要结束---------
-  //                   else if (res.data.status==201) {
+  //                   else if (res.status==201) {
   //                     // 增加对话内容
   //                     that.addChatWithFlag('text', res.data.data, 0, null, "assistant", false, true)
   //                     // 强制退出设置
@@ -415,7 +417,7 @@ Page({
   //                   // ----------------其他异常情况-------
   //                   else {
   //                     console.log("文字上传成功但出错")
-  //                     console.log('status = ', res.data.status); // hongze add
+  //                     console.log('status = ', res.status); // hongze add
   //                     wx.showModal({
   //                       title: '提示',
   //                       content: '文字上传失败，请稍后重新输入1。', // 当文本安全检测接口请求失败时触发

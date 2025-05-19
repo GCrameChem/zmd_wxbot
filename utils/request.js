@@ -1,71 +1,91 @@
-// request.js
-const config = require('../config');  // 引入config文件，获取 base_url 配置
+const config = require('../config');  // 引入配置文件
 
 /**
- * 封装 wx.request 请求
- * @param {Object} options 请求的配置参数
+ * 通用请求封装
+ * @param {Object} options - 请求配置项
  */
 function request(options) {
-  const { url, method = 'GET', data = {}, header = {}, success, fail, complete } = options;
+  const {
+    url,
+    method = 'GET',
+    data = {},
+    header = {},
+    success,
+    fail,
+    complete,
+  } = options;
 
-  // 请求的url应该拼接在base_url后
   const fullUrl = config.base_url + url;
 
-  // 打印请求的配置
-  console.log('Request:', {
+  console.log('[Request Start]', {
     url: fullUrl,
-    method: method,
-    data: data,
+    method,
+    data,
     headers: {
       'content-type': 'application/json',
-      ...header,  // 合并传入的header
+      ...header,
     },
   });
 
   return new Promise((resolve, reject) => {
     wx.request({
       url: fullUrl,
-      method: method,
-      data: data,
+      method,
+      data,
       header: {
         'content-type': 'application/json',
-        ...header,  // 合并传入的header
+        ...header,
       },
       success(res) {
-        // 打印响应数据
-        console.log('Response:', {
+        let responseData = res.data;
+
+        // 尝试解析非 JSON 对象类型的响应
+        if (typeof responseData === 'string') {
+          try {
+            responseData = JSON.parse(responseData);
+          } catch (e) {
+            console.warn('[Warning] 返回内容不是合法 JSON，内容为:', responseData);
+            wx.showToast({
+              title: '服务器响应格式异常',
+              icon: 'none',
+            });
+            reject({ status: -1, message: 'JSON 解析失败', raw: responseData });
+            return;
+          }
+        }
+
+        // 成功处理
+        console.log('[Response OK]', {
+          url: fullUrl,
           statusCode: res.statusCode,
-          data: res.data,
+          data: responseData,
         });
 
         if (res.statusCode === 200) {
-          if (res.data.status === 200) {
-            // 成功回调
-            success && success(res.data);
-            resolve(res.data);
+          if (responseData.status === 200) {
+            success && success(responseData);
+            resolve(responseData);
           } else {
-            // 处理失败状态
+            // 业务逻辑错误（status ≠ 200）
             wx.showToast({
-              title: '请求失败，请稍后重试。',
+              title: responseData.message || '请求失败，请稍后重试',
               icon: 'none',
             });
-            reject(res.data);
+            reject(responseData);
           }
         } else {
-          // 网络错误等
+          // 非200响应码
           wx.showToast({
-            title: '网络请求失败，请检查您的网络。',
+            title: '服务器响应失败',
             icon: 'none',
           });
-          reject(res);
+          reject({ status: res.statusCode, message: 'HTTP错误', data: responseData });
         }
       },
       fail(error) {
-        // 打印错误
-        console.log('Request failed:', error);
-
+        console.error('[Network Error]', error);
         wx.showToast({
-          title: '请求出错，请稍后再试。',
+          title: '网络请求失败，请检查网络',
           icon: 'none',
         });
         fail && fail(error);
