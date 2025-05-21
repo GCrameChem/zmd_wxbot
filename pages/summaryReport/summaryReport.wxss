@@ -25,9 +25,28 @@
   margin-bottom: 150rpx;
   font-weight: bold;
   font-size: 34rpx;
-  margin-bottom: 50rpx;
+  margin-bottom: 30rpx;
   display: block;
 }
+.text-block {
+  font-size: 30rpx;
+  margin-bottom: 30rpx;
+  line-height: 1.8;
+  color: #333;
+  padding: 30rpx;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.05);
+  white-space: pre-wrap; /* 保留换行 */
+}
+
+.rich-paragraph {
+  text-indent: 2em;
+  margin-bottom: 20rpx;
+  font-size: 30rpx;
+  line-height: 1.8;
+  color: #333;
+}
+
 
 .tags {
   display: flex;

@@ -62,8 +62,8 @@ Page({
   //       'content-type': 'application/json' 
   //     },
   //     success: (res) => {
-  //       if (res.data.status === 200) {
-  //         app.globalData.chatListData = res.data.data
+  //       if (res.status === 200) {
+  //         app.globalData.chatListData = res.data
   //       }
   //       else {
   //         wx.showToast({
@@ -161,10 +161,10 @@ Page({
   //     success: function (res) {
   //       console.log(res.data)
   //       // 登录成功
-  //       if (res.data.status==200) {
+  //       if (res.status==200) {
   //         console.log("nihao")
   //         // 通过success来看新的一天与否
-  //         let flag = res.data.success
+  //         let flag = res.success
   //         // 登陆成功，加载历史聊天记录
   //         wx.request({
   //           // url: 'http://192.168.50.225:8080/getHistoryChat', // 服务器接口地址
@@ -179,8 +179,8 @@ Page({
   //           },
   //           success: (res) => {
   //             console.log(res.data)
-  //             if (res.data.status === 200) {
-  //               let chatListData = res.data.data;
+  //             if (res.status === 200) {
+  //               let chatListData = res.data;
   //               // 判断是否需要添加“欢迎回来”
   //               // 不是新的一天
   //               if(flag==1) {
@@ -216,7 +216,7 @@ Page({
   //           }
   //         });
   //       }
-  //       else if (res.data.status==500) {
+  //       else if (res.status==500) {
   //         // 登录失败，提示用户错误信息
   //         wx.showToast({
   //           title: '用户名或密码错误，请重新输入',

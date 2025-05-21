@@ -52,7 +52,6 @@ Page({
       chatList: chatListData,
       scrolltop: "roll" + charlenght,
       showEvalButton: true,
-      hasRedDot: false
     });
     // 页面加载时初始化录音管理器
     this.initRecord();
@@ -61,8 +60,8 @@ Page({
   },
   
   onShow() {
-    // TEMP
     api.checkAllUpdateSignals(this.data.userName).then(res => {
+      console.log("res.evaluate,res.summary",res.data.evaluate,res.data.summary);
       if (res.data.evaluate === 1) {
         this.setData({
           showEvalButton: true,
@@ -71,9 +70,11 @@ Page({
       }
       if (res.data.summary === 1) {
         this.setData({
-          showSummaryButton: true
+          showSummaryButton: true,
+          showSummaryBanner: true
         });
       }
+      console.log("hasRedDot,showSummaryBanner",this.data.hasRedDot,this.data.showSummaryBanner);
     });
   },
   
@@ -179,7 +180,7 @@ Page({
 
   goToSummaryPage() {
     this.setData({
-      showSummaryButton: true,
+      showSummaryBanner: false
     });
     api.confirmSummarySignal(this.data.userName);
     wx.navigateTo({
@@ -263,16 +264,17 @@ Page({
           api.checkContentSafety(word, res.code).then((res) => {
             console.log("文本检测的信息 res.status = ", res.status);
             if (res.status === 200) {
-              console.log("checkContentSafety=200");
+              // console.log("checkContentSafety=200");
               // 文本内容合法，继续聊天
               api.sendTextChat(chatapp.globalData.id, word, that.data.jscode).then((res) => {
-                console.log(res.data.data);
+                console.log(res.data);
                 if (res.status === 200) {
                   // 正常对话过程
-                  that.addChatWithFlag('text', res.data.data, 0, null, "assistant", false, true);
+                  that.addChatWithFlag('text', res.data, 0, null, "assistant", false, true);
+                  that.data.isWaitReply = false; // 标记为可以再次回复
                 } else if (res.status === 201) {
                   // 达到当天对话上限，对话将要结束
-                  that.addChatWithFlag('text', res.data.data, 0, null, "assistant", false, true);
+                  that.addChatWithFlag('text', res.data, 0, null, "assistant", false, true);
                   that.handleEndOfConversation();
                 } else {
                   // 其他异常情况
@@ -288,6 +290,7 @@ Page({
                       }
                     }
                   });
+                  that.data.isWaitReply = false; // 标记为可以再次回复
                 }
               }).catch(() => {
                 wx.showModal({
@@ -300,6 +303,7 @@ Page({
                     }
                   }
                 });
+                that.data.isWaitReply = false; // 标记为可以再次回复
               });
             } else {
               // 内容不合法
@@ -307,6 +311,7 @@ Page({
                 title: '输入内容不合法',
               });
               that.removeLastChat();
+              that.data.isWaitReply = false; // 标记为可以再次回复
             }
           })
           .catch(() => {
@@ -327,6 +332,7 @@ Page({
             title: '网络请求失败，请稍后重试',
             icon: 'none'
           });
+          that.data.isWaitReply = false; // 标记为可以再次回复
         }
       },
       fail: function (err) {
@@ -336,8 +342,10 @@ Page({
           title: '网络请求失败，请稍后重试',
           icon: 'none'
         });
+        that.data.isWaitReply = false; // 标记为可以再次回复
       }
     });
+    
   },
   // sendChat: function () {
   //   // 放置作用域改变
@@ -401,16 +409,16 @@ Page({
   //                     'content-type': 'application/json; charset=utf-8' // 请求头json格式, hongze add ; charset=utf-8
   //                   },// 若文本内容合法，向后端发送第二条请求，即文本聊天交互。
   //                 success: function (res) {
-  //                   console.log(res.data.data)
+  //                   console.log(res.data)
   //                   // -----------------正常对话过程-----------
   //                   if(res.status==200) {
   //                     // 增加对话内容
-  //                     that.addChatWithFlag('text', res.data.data, 0, null, "assistant", false, true)
+  //                     that.addChatWithFlag('text', res.data, 0, null, "assistant", false, true)
   //                   } 
   //                   // ------------------达到当天对话上限，对话将要结束---------
   //                   else if (res.status==201) {
   //                     // 增加对话内容
-  //                     that.addChatWithFlag('text', res.data.data, 0, null, "assistant", false, true)
+  //                     that.addChatWithFlag('text', res.data, 0, null, "assistant", false, true)
   //                     // 强制退出设置
   //                     that.handleEndOfConversation();
   //                   }
@@ -626,7 +634,7 @@ Page({
         // -------------对话达到当天的上限----------------
         else if (obj.status === 201) {
           // 增加对话内容
-          that.addChatWithFlag('text', res.data.data, 0, null, "assistant", false, true)
+          that.addChatWithFlag('text', res.data, 0, null, "assistant", false, true)
           // 强制退出设置
           that.handleEndOfConversation();
         }

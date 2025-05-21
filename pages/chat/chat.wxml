@@ -77,15 +77,15 @@
   </view>
   <!-- 初步评估按钮 -->
   <view wx:if="{{showEvalButton}}" class="eval-button-wrapper">
-      <button class="eval-button" bindtap="navigateToPreAssessment">
-        初步评估
-        <view wx:if="{{hasRedDot}}" class="red-dot"></view>
-      </button>
+    <view class="eval-button" bindtap="navigateToPreAssessment">
+      初步评估
+    <view wx:if="{{hasRedDot}}" class="red-dot"></view>
+</view>
   </view>
   <!-- 阶段评估按钮 -->
   <view wx:if="{{showSummaryButton}}" class="summary-button-wrapper">
-      <button class="summary-button" bindtap="goToSummaryPage">
-        阶段评估报告</button>
+      <view class="summary-button" bindtap="goToSummaryPage">
+        阶段评估报告</view>
   </view>
   <!-- 输入按键部分 -->
   <view class="ask-input-container">

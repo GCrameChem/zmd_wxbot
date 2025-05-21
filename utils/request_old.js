@@ -39,7 +39,7 @@ function request(options) {
       //   });
 
       //   if (res.statusCode === 200) {
-      //     if (res.data.status === 200) {
+      //     if (res.status === 200) {
       //       // 成功回调
       //       success && success(res.data);
       //       resolve(res.data);

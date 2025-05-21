@@ -222,10 +222,10 @@ Page({
   //       },
   //       success: (res) => {
   //         console.log("看", res.data)
-  //         if(res.data.status==200) {
+  //         if(res.status==200) {
   //           this.startCountdown_code();  // 启动倒计时
   //           this.setData({errorMessage_code: ''});
-  //         } else if (res.data.status==201) {
+  //         } else if (res.status==201) {
   //           wx.showModal({
   //             title: '重复注册',
   //             content: '该手机号已经注册过，点击返回登录页面进行登录。',
@@ -304,8 +304,8 @@ Page({
       .then((res) => {
         // 处理成功响应
         console.log("Response:", res.data);
-        if (res.data.status == 200) {
-          if (res.data.success == 1) {
+        if (res.status == 200) {
+          if (res.success == 1) {
             wx.showModal({
               title: '注册成功',
               content: '注册已完成，点击返回登录页面。',
@@ -320,7 +320,7 @@ Page({
                 }
               }
             });
-          } else if (res.data.success == 2) {
+          } else if (res.success == 2) {
             wx.showModal({
               title: '重复注册',
               content: '该手机号已经注册过，点击返回登录页面进行登录。',
@@ -334,12 +334,12 @@ Page({
                 }
               }
             });
-          } else if (res.data.success == 3) {
+          } else if (res.success == 3) {
             wx.showToast({
               title: '验证码已过期，请重试',
               icon: 'none',
             });
-          } else if (res.data.success == 4) {
+          } else if (res.success == 4) {
             wx.showToast({
               title: '验证码错误，请稍后重试',
               icon: 'none',
@@ -393,8 +393,8 @@ Page({
   //       // 处理成功响应
   //       console.log("Response:", res.data);
   //       // 假设后端返回的成功状态为 1---注册成功，0----注册失败，2---已经注册过了
-  //       if (res.data.status==200) {
-  //         if (res.data.success==1) {
+  //       if (res.status==200) {
+  //         if (res.success==1) {
   //           wx.showModal({
   //             title: '注册成功',
   //             content: '注册已完成，点击返回登录页面。',
@@ -409,7 +409,7 @@ Page({
   //               }
   //             }
   //           });
-  //         } else if (res.data.success==2) {
+  //         } else if (res.success==2) {
   //           wx.showModal({
   //             title: '重复注册',
   //             content: '该手机号已经注册过，点击返回登录页面进行登录。',
@@ -424,12 +424,12 @@ Page({
   //               }
   //             }
   //           });
-  //         } else if (res.data.success==3) {
+  //         } else if (res.success==3) {
   //           wx.showToast({
   //             title: '验证码已过期，请重试',
   //             icon: 'none',
   //           });
-  //         } else if(res.data.success==4) {
+  //         } else if(res.success==4) {
   //           wx.showToast({
   //             title: '验证码错误，请稍后重试',
   //             icon: 'none',

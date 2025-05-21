@@ -128,7 +128,7 @@ sendVerificationCode: function() {
   //         flag: 'change'
   //       },
   //       success: (res) => {
-  //         if(res.data.status==200) {
+  //         if(res.status==200) {
   //           this.startCountdown_code();  // 启动倒计时
   //           this.setData({errorMessage_code: ''});
   //         }
@@ -273,9 +273,9 @@ reset_password: function() {
   //     success: function (res) {
   //       // 处理成功响应
   //       console.log("Response:", res.data);
-  //       if (res.data.status===200) {
+  //       if (res.status===200) {
   //          // 假设后端返回的成功状态为 1---之前未注册过，0----重置失败，2---之前注册过了，更新密码成功
-  //         if (res.data.success==1) {
+  //         if (res.success==1) {
   //           wx.showModal({
   //             content: '您未进行注册，请先返回登录页面进行注册',
   //             showCancel: false, // 不显示取消按钮
@@ -289,7 +289,7 @@ reset_password: function() {
   //               }
   //             }
   //           });
-  //         } else if (res.data.success==2) {
+  //         } else if (res.success==2) {
   //           wx.showModal({
   //             content: '密码重置成功，点击返回登录页面进行登录。',
   //             showCancel: false, // 不显示取消按钮

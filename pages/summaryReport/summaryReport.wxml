@@ -6,7 +6,7 @@
   <!-- 分隔线 -->
   <view class="divider"></view>
   <view class="section">
-    <text>{{ summaryData.summary }}</text>
+    <text class="text-block">{{ summaryData.summary }}</text>
   </view>
   
   <view class="section">
@@ -18,15 +18,13 @@
     </view>
   </view>
   
-
-
   <view class="section">
-    <text class="title">📌 关键问题</text>
-    <text>{{ summaryData.main_problems }}</text>
-  </view>
+  <text class="title">📌 关键问题</text>
+  <rich-text nodes="{{ summaryData.mainProblemsNodes }}"></rich-text>
+</view>
 
-  <view class="section">
-    <text class="title">💡 知心建议</text>
-    <text>{{ summaryData.suggestions }}</text>
-  </view>
+<view class="section">
+  <text class="title">💡 知心建议</text>
+  <rich-text nodes="{{ summaryData.suggestionNodes }}"></rich-text>
+</view>
 </view>

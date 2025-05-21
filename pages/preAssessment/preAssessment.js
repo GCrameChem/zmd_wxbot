@@ -3,6 +3,13 @@ const api = require('../../api/api');
 const request = require('../../utils/request');
 var chatapp = getApp();
 
+function formatDateTime(dateStr) {
+  const date = new Date(dateStr);
+  const pad = n => (n < 10 ? '0' + n : n);
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ` +
+         `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+};
+
 Page({
   data: {
     userName: chatapp.globalData.id,
@@ -22,7 +29,9 @@ Page({
     this.loadDataFromCacheOrDefault();
     this.fetchAssessmentData();  // 页面加载时调用
   },
-
+  onShow() {
+  },
+  
   // 请求后端接口，获取评估数据
   fetchAssessmentData() {
     const user_name = this.data.userName;
@@ -45,6 +54,8 @@ Page({
           score: item.score || 0,
           symptom: item.symptom || '-暂无数据-'
         }));
+        // 时间格式化处理
+        const last_modified = formatDateTime(data.last_modified);
 
         this.setData({
           phq9Score: data.phq9_score || 0,
@@ -53,7 +64,7 @@ Page({
           gad7_level: data.gad7_level || '',
           phq9Details,
           gad7Details,
-          last_modified: data.last_modified || '',
+          last_modified,
           // evaluation: data.evaluation || '',
           firstUpdateDone: true
         });
@@ -64,7 +75,7 @@ Page({
           gad7_score: data.gad7_score,
           phq9_level: data.phq9_level,
           gad7_level: data.gad7_level,
-          last_modified: data.last_modified,
+          last_modified: last_modified,
           phq9_detail: phq9Details,
           gad7_detail: gad7Details
         });
@@ -75,8 +86,7 @@ Page({
       console.error("获取评估数据失败:", err);
     });
   },
-  onShow() {
-  },
+  
   loadDataFromCacheOrDefault() {
     const data = wx.getStorageSync('evalOverview');
     let phq9Details = PHQ9_QUESTIONS.map((q, i) => ({
@@ -101,6 +111,10 @@ Page({
         score: data.gad7_scores ? data.gad7_scores[index] || 0 : 0,
         symptom: data.gad7_symptoms ? data.gad7_symptoms[index] || '-暂无数据-' : '-暂无数据-'
       }));
+       // 时间格式化处理
+      if (data.last_modified) {
+        data.last_modified = formatDateTime(data.last_modified);
+      }
 
       this.setData({
         phq9Score: data.phq9_score,
