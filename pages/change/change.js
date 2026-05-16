@@ -1,6 +1,7 @@
 // pages/register/register.ts
 const api = require('../../api/api');  // 引入api文件
 const request = require('../../utils/request');  // 引入request文件
+const config = require('../../config'); // 图片资源
 Page({
   /**
    * 页面的初始数据
@@ -20,6 +21,7 @@ Page({
     isCodeButtonDisabled: false, 
     timeRemaining: 60, // 倒计时
     timer: null, // 倒计时定时器
+    bgImg1:`${config.image_url}/bg1.png`,
   },
 
   onLoad() {

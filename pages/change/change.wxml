@@ -1,7 +1,7 @@
 <!--pages/register/register.wxml-->
 <view class="container">
   <!-- <image class="background-image" src=" https://yunxig.cn/images/bg1.png" mode="aspectFill"></image> -->
-  <image class="background-image" src="cloud://env-6gwdgqfkc232ef67.656e-env-6gwdgqfkc232ef67-1338470007/bg1.png" mode="aspectFill"></image>
+  <image class="background-image" src="{{bgImg1}}" mode="aspectFill"></image>
   <view class="header">
     <text class="title">重新设置密码</text>
     <van-icon name="chat-o" size="28px" class="icon"/>

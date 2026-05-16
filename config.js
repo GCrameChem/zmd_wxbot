@@ -2,8 +2,8 @@
 const config = {
   // 默认接口根地址，可以根据不同环境修改
   // 服务器地址
-  base_url: 'http://1.14.92.141:8080',
-
+  base_url: 'http://106.55.103.208:12348',
+  image_url: 'http://106.55.103.208:12348/picture',
   // 本地后端1
   // base_url: 'http://localhost:5000',
 

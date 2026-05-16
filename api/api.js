@@ -1,8 +1,54 @@
 // api.js
-const { request } = require('../utils/request'); // 引入request封装的request函数
+const { request, uploadFile } = require('../utils/request'); // 引入request封装的request函数
 
 // 定义所有接口的路由
 const api = {
+  // 用户登录接口
+  login: (user_name, user_password) => {
+    return request({
+      url: '/login',  // 登录接口路径
+      method: 'POST',
+      data: {
+        user_name: user_name,
+        user_password: user_password,
+      },
+    });
+  },
+  // 发送验证码接口
+  sendVerificationCode: (phoneNumber, flag = 'change') => {
+    return request({
+      url: '/sendCode',  // 获取验证码的接口路径
+      method: 'POST',
+      data: {
+        phoneNumber: phoneNumber,
+        flag: flag,
+      },
+    });
+  },
+  // 注册接口
+  registerUser: (user_id, user_password0, user_code) => {
+    return request({
+      url: '/register',
+      method: 'POST',
+      data: {
+        user_id: user_id,
+        user_password: user_password0,
+        user_code: user_code,
+      },
+    });
+  },
+  // 重置密码接口
+  resetPassword: (user_id, user_password0, user_code) => {
+    return request({
+      url: '/change_password',  // 重置密码接口路径
+      method: 'POST',
+      data: {
+        user_id: user_id,
+        user_password: user_password0,
+        user_code: user_code,
+      },
+    });
+  },
   // 文字对话接口
   textChat: (data) => {
     return request({
@@ -17,6 +63,40 @@ const api = {
       },
     });
   },
+  // 发送
+  sendTextChat: (user_name, word, jscode) => {
+    return request({
+      url: '/textchat',
+      method: 'POST',
+      data: {
+        user_name: user_name,
+        text: word,
+        jscode: jscode,
+      },
+    });
+  },
+
+  // ========== 新增：语音对话接口（文件上传） ==========
+  /**
+   * 语音对话接口
+   * @param {string} filePath - 录音文件的本地路径
+   * @param {string} user_name - 用户名
+   * @param {number} second - 录音时长（秒）
+   * @returns {Promise} 返回解析后的响应数据
+   */
+  voiceChat: (filePath, user_name, second) => {
+    return uploadFile({
+      url: '/voiceChat',  // 注意：这里使用的是相对路径，config.base_url 会自动拼接
+      filePath: filePath,
+      name: 'voiceFile',
+      formData: {
+        filePath: filePath,
+        user_name: user_name,
+        second: second,
+      },
+    });
+  },
+
   // 获取历史聊天记录接口
   getHistoryChat: (user_name) => {
     return request({
@@ -25,6 +105,17 @@ const api = {
       data: {
         user_name: user_name
       }
+    });
+  },
+  // 安全检测接口
+  checkContentSafety: (word, jscode) => {
+    return request({
+      url: '/text_content_check',
+      method: 'POST',
+      data: {
+        text: word,
+        jscode: jscode,
+      },
     });
   },
 
@@ -53,7 +144,6 @@ const api = {
     });
   },
 
-  
   // 初步评估页面
   getAssessmentData: (user_name) => {
     return request({
@@ -74,80 +164,6 @@ const api = {
     });
   },
 
-  // 用户登录接口
-  login: (user_name, user_password) => {
-    return request({
-      url: '/login',  // 登录接口路径
-      method: 'POST',
-      data: {
-        user_name: user_name,
-        user_password: user_password,
-      },
-    });
-  },
-
-  // 发送验证码接口
-  sendVerificationCode: (phoneNumber, flag = 'change') => {
-    return request({
-      url: '/sendCode',  // 获取验证码的接口路径
-      method: 'POST',
-      data: {
-        phoneNumber: phoneNumber,
-        flag: flag,
-      },
-    });
-  },
-
-// 重置密码接口
-  esetPassword: (user_id, user_password0, user_code) => {
-    return request({
-      url: '/change_password',  // 重置密码接口路径
-      method: 'POST',
-      data: {
-        user_id: user_id,
-        user_password: user_password0,
-        user_code: user_code,
-      },
-    });
-  },
-
-  // 发送
-  sendTextChat: (user_name, word, jscode) => {
-    return request({
-      url: '/textchat',
-      method: 'POST',
-      data: {
-        user_name: user_name,
-        text: word,
-        jscode: jscode,
-      },
-    });
-  },
-
-  // 安全检测接口
-  checkContentSafety: (word, jscode) => {
-    return request({
-      url: '/text_content_check',
-      method: 'POST',
-      data: {
-        text: word,
-        jscode: jscode,
-      },
-    });
-  },
-
-  // 注册接口
-  registerUser: (user_id, user_password0, user_code) => {
-    return request({
-      url: '/register',
-      method: 'POST',
-      data: {
-        user_id: user_id,
-        user_password: user_password0,
-        user_code: user_code,
-      },
-    });
-  },
 
   // 添加其他接口时，按照同样的方式添加
 };

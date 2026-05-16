@@ -1,5 +1,6 @@
 <view class="container">
-  <image class="background-image" src="cloud://env-6gwdgqfkc232ef67.656e-env-6gwdgqfkc232ef67-1338470007/bg1.png" mode="aspectFill"></image>
+  <image class="background-image" src="{{bgImg1}}" mode="aspectFill"></image>
+
   <view class="header">
     <text class="title">登录，\n 心灵之旅</text>
     <van-icon name="chat-o" size="28px" class="icon"/>

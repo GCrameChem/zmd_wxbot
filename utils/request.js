@@ -1,3 +1,4 @@
+// utils/request.js
 const config = require('../config');  // 引入配置文件
 
 /**
@@ -98,6 +99,95 @@ function request(options) {
   });
 }
 
+/**
+ * 文件上传封装
+ * @param {Object} options - 上传配置项
+ * @param {string} options.url - 上传接口地址（相对路径或绝对路径）
+ * @param {string} options.filePath - 要上传的文件路径
+ * @param {string} options.name - 文件对应的 key
+ * @param {Object} options.formData - 额外的表单数据
+ * @param {Object} options.header - 请求头
+ */
+function uploadFile(options) {
+  const {
+    url,
+    filePath,
+    name = 'file',
+    formData = {},
+    header = {},
+    success,
+    fail,
+    complete,
+  } = options;
+
+  const fullUrl = config.base_url + url;
+
+  console.log('[Upload Start]', {
+    url: fullUrl,
+    filePath,
+    name,
+    formData,
+  });
+
+  return new Promise((resolve, reject) => {
+    wx.uploadFile({
+      url: fullUrl,
+      filePath: filePath,
+      name: name,
+      formData: formData,
+      header: {
+        'content-type': 'multipart/form-data',
+        ...header,
+      },
+      success(res) {
+        let responseData = res.data;
+
+        // 尝试解析 JSON 响应
+        if (typeof responseData === 'string') {
+          try {
+            responseData = JSON.parse(responseData);
+          } catch (e) {
+            console.warn('[Upload Warning] 返回内容不是合法 JSON，内容为:', responseData);
+            reject({ status: -1, message: 'JSON 解析失败', raw: responseData });
+            return;
+          }
+        }
+
+        console.log('[Upload Success]', {
+          url: fullUrl,
+          statusCode: res.statusCode,
+          data: responseData,
+        });
+
+        if (res.statusCode === 200) {
+          success && success(responseData);
+          resolve(responseData);
+        } else {
+          wx.showToast({
+            title: '上传失败，请稍后重试',
+            icon: 'none',
+          });
+          reject({ status: res.statusCode, message: 'HTTP错误', data: responseData });
+        }
+      },
+      fail(error) {
+        console.error('[Upload Error]', error);
+        wx.showToast({
+          title: '网络请求失败，请检查网络',
+          icon: 'none',
+        });
+        fail && fail(error);
+        reject(error);
+      },
+      complete() {
+        complete && complete();
+      },
+    });
+  });
+}
+
+
 module.exports = {
   request,
+  uploadFile,
 };

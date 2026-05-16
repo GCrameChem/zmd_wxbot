@@ -2,6 +2,7 @@
 // 获取应用实例
 var app = getApp()
 const api = require('../../api/api');  // 引入api文件
+const config = require('../../config'); // 图片资源
 Page({
   /**
    * 页面的初始数据
@@ -10,6 +11,7 @@ Page({
     user_name:"",
     user_password:"",
     show: false,
+    bgImg1:`${config.image_url}/bg1.png`,
   },
 
   onChange_name(event) {

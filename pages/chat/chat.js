@@ -1,4 +1,5 @@
 const api = require('../../api/api');  // 引入api文件
+const config = require('../../config'); // 图片资源
 // 当前页面对象
 let MyPage;
 var chatListData = [];
@@ -41,6 +42,15 @@ Page({
     countdown: 5, // 退出倒计时秒数
     // 文本安全检测jscode
     jscode: null,
+    // 图片资源
+    bgImg: `${config.image_url}/bg4.png`,
+    voiceImg: `${config.image_url}/voice.png`,
+    keyboardImg: `${config.image_url}/keyboard.png`,
+    sendImg: `${config.image_url}/send.png`,
+    pandaGif: `${config.image_url}/panda2.gif`,
+    playImg: `${config.image_url}/play.png`,
+    pauseImg: `${config.image_url}/pause.png`,
+    voice1Img: `${config.image_url}/voice1.png`,
   },
 
   // 页面生命周期函数----加载识别
@@ -597,65 +607,24 @@ Page({
   },
 
   // 对话方式二 —— 语音版-----上传录音文件到服务器----
-  uploadRecording: function(path) {
-    console.log("调用上传录音函数")
-    console.log(path)
-    wx.uploadFile({
-      // url: 'https://yunxig.cn/voiceChat', // 语音对话接口
-      // url: 'http://192.168.50.225:8080/voiceChat',
-      // url: 'http://172.20.10.4:8080/voiceChat',
-      url: 'http://1.14.92.141:8080/voiceChat',
-      filePath: path,
-      name: 'voiceFile',
-      formData: { 
-        filePath: path, 
-        user_name: chatapp.globalData.id, 
-        second: this.data.tempsecond,
-      },
-
-      success: (res) => {
-        const obj = JSON.parse(res.data)
-        console.log("报错信息", obj.status)
-        // -----------语音上传失败------------
-        if (obj.status !==201 && obj.status!==200) {
-
-          wx.showModal({
-            title: '提示',
-            content: '语音上传失败',
-            showCancel: false,
-            success: function (res) {
-              if (res.confirm) {
-                // 用户点击确认后执行
-                that.removeLastChat();
-              }
-            }
-          });
-        } 
-        // -------------对话达到当天的上限----------------
-        else if (obj.status === 201) {
-          // 增加对话内容
-          that.addChatWithFlag('text', res.data, 0, null, "assistant", false, true)
-          // 强制退出设置
-          that.handleEndOfConversation();
-        }
-        // ---------------正常对话流程------------
-        else {
-          // 将录音文件的url修改为后端上的url
-          console.log(obj.url)
-          chatListData[chatListData.length-1]['url'] = obj.url
-          this.setData({
-            chatList:chatListData,
-          });
-          // 生成ai的回复加入聊天记录
-          this.addChatWithFlag('text', obj.data, 0, null, 'assistant', false, true);
-        }
-      },
-      // 未请求到后端服务器
-      fail: (err) => {
-        console.log('上传失败', err);
+  // 对话方式二 —— 语音版 ----- 上传录音文件到服务器 -----
+uploadRecording: function(path) {
+  console.log("调用上传录音函数");
+  console.log(path);
+  
+  const that = this;
+  
+  // 调用 api 中封装的语音上传接口
+  api.voiceChat(path, chatapp.globalData.id, this.data.tempsecond)
+    .then(obj => {
+      console.log("响应数据", obj);
+      console.log("状态码", obj.status);
+      
+      // -----------语音上传失败------------
+      if (obj.status !== 201 && obj.status !== 200) {
         wx.showModal({
           title: '提示',
-          content: '语音上传失败，请重新输入或使用文字输入',
+          content: '语音上传失败',
           showCancel: false,
           success: function (res) {
             if (res.confirm) {
@@ -664,17 +633,124 @@ Page({
             }
           }
         });
-      },
-      complete: () => {
-        // 隐藏加载提示框
-        wx.hideLoading();
+      } 
+      // -------------对话达到当天的上限----------------
+      else if (obj.status === 201) {
+        // 增加对话内容
+        that.addChatWithFlag('text', obj.data, 0, null, "assistant", false, true);
+        // 强制退出设置
+        that.handleEndOfConversation();
+      }
+      // ---------------正常对话流程------------
+      else {
+        // 将录音文件的url修改为后端上的url
+        console.log("返回的音频URL", obj.url);
+        chatListData[chatListData.length - 1]['url'] = obj.url;
         this.setData({
-          recordStatus: false,
-          isWaitReply: false,
+          chatList: chatListData,
         });
-      },
+        // 生成ai的回复加入聊天记录
+        this.addChatWithFlag('text', obj.data, 0, null, 'assistant', false, true);
+      }
+    })
+    .catch(err => {
+      console.log('上传失败', err);
+      wx.showModal({
+        title: '提示',
+        content: '语音上传失败，请重新输入或使用文字输入',
+        showCancel: false,
+        success: function (res) {
+          if (res.confirm) {
+            // 用户点击确认后执行
+            that.removeLastChat();
+          }
+        }
+      });
+    })
+    .finally(() => {
+      // 隐藏加载提示框
+      wx.hideLoading();
+      this.setData({
+        recordStatus: false,
+        isWaitReply: false,
+      });
     });
-  },
+},
+  // uploadRecording: function(path) {
+  //   console.log("调用上传录音函数")
+  //   console.log(path)
+  //   wx.uploadFile({
+  //     url: 'http://106.55.103.208:12348/voiceChat',
+  //     filePath: path,
+  //     name: 'voiceFile',
+  //     formData: { 
+  //       filePath: path, 
+  //       user_name: chatapp.globalData.id, 
+  //       second: this.data.tempsecond,
+  //     },
+
+  //     success: (res) => {
+  //       const obj = JSON.parse(res.data)
+  //       console.log("报错信息", obj.status)
+  //       // -----------语音上传失败------------
+  //       if (obj.status !==201 && obj.status!==200) {
+
+  //         wx.showModal({
+  //           title: '提示',
+  //           content: '语音上传失败',
+  //           showCancel: false,
+  //           success: function (res) {
+  //             if (res.confirm) {
+  //               // 用户点击确认后执行
+  //               that.removeLastChat();
+  //             }
+  //           }
+  //         });
+  //       } 
+  //       // -------------对话达到当天的上限----------------
+  //       else if (obj.status === 201) {
+  //         // 增加对话内容
+  //         that.addChatWithFlag('text', res.data, 0, null, "assistant", false, true)
+  //         // 强制退出设置
+  //         that.handleEndOfConversation();
+  //       }
+  //       // ---------------正常对话流程------------
+  //       else {
+  //         // 将录音文件的url修改为后端上的url
+  //         console.log(obj.url)
+  //         chatListData[chatListData.length-1]['url'] = obj.url
+  //         this.setData({
+  //           chatList:chatListData,
+  //         });
+  //         // 生成ai的回复加入聊天记录
+  //         this.addChatWithFlag('text', obj.data, 0, null, 'assistant', false, true);
+  //       }
+  //     },
+  //     // 未请求到后端服务器
+  //     fail: (err) => {
+  //       console.log('上传失败', err);
+  //       wx.showModal({
+  //         title: '提示',
+  //         content: '语音上传失败，请重新输入或使用文字输入',
+  //         showCancel: false,
+  //         success: function (res) {
+  //           if (res.confirm) {
+  //             // 用户点击确认后执行
+  //             that.removeLastChat();
+  //           }
+  //         }
+  //       });
+  //     },
+  //     complete: () => {
+  //       // 隐藏加载提示框
+  //       wx.hideLoading();
+  //       this.setData({
+  //         recordStatus: false,
+  //         isWaitReply: false,
+  //       });
+  //     },
+  //   });
+  // },
 
   // 增加对话到显示界面（scrolltopFlag为是否滚动标志）
   addChatWithFlag: function (type, text, url, second, role, play, scrolltopFlag) {
