@@ -1,0 +1,117 @@
+/* pages/change/change.wxss *//* pages/register/register.wxss */
+.container {
+  margin: 20px;
+  /* display: flex; */
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* 将图片放在最底层 */
+}
+
+.header {
+  margin-top: 50%;
+  margin-left: 10%;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: bolder;
+  text-align: center;
+  white-space: pre-line; /* 保持文本中的换行 */
+}
+
+.icon {
+  margin-left: 10px;
+}
+
+/* 表单信息的样式 */
+.form-container {
+  margin-left: 10%;
+  margin-top: 25%;
+  margin-bottom: 20%; /* 将表单容器放置在下半部分，调整这个值来控制高度 */
+  width: 80%;
+}
+/* 设置相关注册信息 */
+.error-message {
+  color: red;
+  font-size: 12px;
+}
+.input-field {
+  margin-bottom: 10%;
+  /* z-index: 0; */
+}
+
+.login-filed {
+  margin-top: 10%;
+}
+.new-input {
+  background-color: #f5f8ff !important;
+  border-radius: 0.8em;
+}
+.new-input .van-field__control {
+  color: #000; /* 设置输入框中字体的颜色 */
+}
+.new-input .van-field__placeholder {
+  color: rgb(107, 107, 107); /* 设置输入框的占位符颜色 */
+  font-size: 12px;
+}
+
+.new-login {
+  background-color: #8ec5fe !important;
+  border: #8ec5fe !important;
+}
+
+.return-button {
+  background-color: #f5f8ff !important;
+  border: #fff !important;
+  color: #000 !important;
+  font-weight: bolder;
+}
+
+/* 感觉没用，但是删了有影响>< */
+input, button {
+  width: 100%;
+  margin-bottom: 10px;
+  background-color: #8ec5fe;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+button {
+  background-color: #8ec5fe;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+
+/* 让验证码输入框和按钮在同一行显示 */
+.flex-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;  /* 垂直居中对齐 */
+}
+
+
+/* 获取验证码按钮的样式 */
+.send-code {
+  width: 60%;
+  font-size: 14px;
+  border-radius: 30px;
+  line-height: 25px;
+  margin-bottom: 0;
+  background-color: #8ec5fe !important;
+  border: #8ec5fe !important;
+}
+
+/* 按钮禁用状态的样式 */
+.send-code:disabled {
+  background-color: #ccc;
+  color: #666;
+}

@@ -1,0 +1,30 @@
+<!--pages/summaryReport/summaryReport.js.wxml-->
+<view class="summary-container">
+  <view>
+    <text class="main_title">🧾 阶段总结报告</text>
+  </view>
+  <!-- 分隔线 -->
+  <view class="divider"></view>
+  <view class="section">
+    <text class="text-block">{{ summaryData.summary }}</text>
+  </view>
+  
+  <view class="section">
+    <text class="title">🔑 本轮关键词</text>
+    <view class="tags">
+      <block wx:for="{{summaryData.keywords}}" wx:key="index">
+        <view class="tag">{{item}}</view>
+      </block>
+    </view>
+  </view>
+  
+  <view class="section">
+  <text class="title">📌 关键问题</text>
+  <rich-text nodes="{{ summaryData.mainProblemsNodes }}"></rich-text>
+</view>
+
+<view class="section">
+  <text class="title">💡 知心建议</text>
+  <rich-text nodes="{{ summaryData.suggestionNodes }}"></rich-text>
+</view>
+</view>

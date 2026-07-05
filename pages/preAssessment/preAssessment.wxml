@@ -1,0 +1,60 @@
+<view class="container">
+
+<!-- 用户信息与总评估 -->
+<view class="user-summary">
+  <text class="user-name">用户：{{ userName }}</text>
+
+  <view class="summary-row">
+    <view class="summary-item">
+      <text>PHQ-9 得分：{{ phq9Score }}</text><br />
+      <text>，评估：{{ phq9_level }}</text>
+    </view>
+    <view class="summary-item">
+      <text>GAD-7 得分：{{ gad7Score }}</text><br />
+      <text>，评估：{{ gad7_level }}</text>
+    </view>
+  </view>
+
+  <!-- <text class="evaluation">心理状态评估：{{ evaluation }}</text> -->
+  <text class="modified">上次更新：{{ last_modified }}</text>
+</view>
+
+
+<!-- 分隔线 -->
+<view class="divider"></view>
+
+<!-- PHQ-9 量表详情 -->
+<view class="scale-section">
+  <text class="scale-title">📋 PHQ-9 抑郁自评量表</text>
+  <view class="table-header">
+    <text class="col-title">题目</text>
+    <text class="col-score">得分</text>
+    <text class="col-level">详细症状</text>
+  </view>
+  <block wx:for="{{ phq9Details }}" wx:key="index" wx:for-item="item" wx:for-index="index">
+    <view class="table-row">
+      <text class="col-title">{{ item.question }}</text>
+      <text class="col-score">{{ item.score }}</text>
+      <text class="col-level">{{ item.symptom }}</text>
+    </view>
+  </block>
+</view>
+
+<!-- GAD-7 量表详情 -->
+<view class="scale-section">
+  <text class="scale-title">📋 GAD-7 焦虑自评量表</text>
+  <view class="table-header">
+    <text class="col-title">题目</text>
+    <text class="col-score">得分</text>
+    <text class="col-level">详细症状</text>
+  </view>
+  <block wx:for="{{ gad7Details }}" wx:key="index" wx:for-item="item" wx:for-index="index">
+    <view class="table-row">
+      <text class="col-title">{{ item.question }}</text>
+      <text class="col-score">{{ item.score }}</text>
+      <text class="col-level">{{ item.symptom }}</text>
+    </view>
+  </block>
+</view>
+
+</view>

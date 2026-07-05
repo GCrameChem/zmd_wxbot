@@ -1,0 +1,470 @@
+/* pages/chat/chat.wxss */
+@import "/wxss/we_ui/weui.wxss";
+page {
+  height: 100%;
+  overflow: hidden;
+}
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* 将图片放在最底层 */
+}
+.strip-popup {
+  position: fixed;
+  bottom: 100rpx;
+  left: 5%;
+  width: 90%;
+  background-color: #fff8f0;
+  border: 1rpx solid #f0c090;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.popup-title {
+  font-weight: bold;
+  margin-bottom: 12rpx;
+  font-size: 28rpx;
+  color: #ff6600;
+}
+
+.popup-content text {
+  display: block;
+  font-size: 26rpx;
+  color: #333;
+  margin-top: 6rpx;
+}
+
+.container {
+  overflow: hidden;
+  /* bug! */
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  padding: 15rpx 15rpx;
+}
+
+.chat-container {
+  height: 48%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  /* flex-wrap: wrap; */
+  padding: 15rpx 15rpx;
+}
+.summary-banner {
+  position: fixed;
+  top: 170rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 95%;
+  background-color: #2b6cb0; /* 深蓝色背景 */
+  color: #ffffff;            /* 白色字体 */
+  padding: 12rpx 0;          /* 缩小高度 */
+  font-weight: bold;         /* 字体加粗 */
+  text-align: center;
+  border-radius: 12rpx;
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+
+.eval-button-wrapper {
+  position: fixed;
+  bottom: 150rpx;
+  left: 20rpx;
+  z-index: 1000;
+}
+
+.eval-button {
+  position: relative;
+  background-color: #007aff;
+  color: white;
+  border-radius: 50rpx;
+  padding: 20rpx 40rpx;
+  font-size: 28rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2);
+}
+
+.red-dot {
+  width: 16rpx;
+  height: 16rpx;
+  background-color: red;
+  border-radius: 50%;
+  position: absolute;
+  top: -10rpx;
+  right: -10rpx;
+}
+
+.summary-button-wrapper {
+  position: fixed;
+  bottom: 150rpx;
+  left: 230rpx;
+  z-index: 1000;
+}
+
+.summary-button {
+  position: relative;
+  background-color: #007aff;
+  color: white;
+  border-radius: 50rpx;
+  padding: 20rpx 40rpx;
+  font-size: 28rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2);
+}
+
+.chat-list {
+  flex: 1;
+  padding-bottom: 40rpx;
+}
+.scrool-view {
+  height: 80%
+}
+
+.chat-left {
+  display: flex;
+  align-items: center;
+  margin-top: 20rpx;
+}
+
+.chat-left text {
+  flex: 1;
+  margin-left: 10rpx;
+  padding: 10rpx 0;
+  background-color: #e9ecf3;
+  color: #000;
+  border-radius: 11rpx;
+  word-break: break-all;
+  box-sizing: border-box;
+}
+
+.chat-bubble-left {
+  position: relative; /* 为伪元素定位 */
+  max-width: 70%;
+  background-color: #e9ecf3;
+  color: #000;
+  padding: 10rpx 15rpx;
+  border-radius: 10rpx;
+  margin-left: 15rpx;
+  /* margin-left: 10rpx; */
+  word-break: break-all;
+}
+
+.chat-bubble-left::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -15rpx; /* 调整尖的位置 */
+  width: 0;
+  height: 0;
+  border: 15rpx solid transparent; /* 调整边框大小 */
+  border-right-color: #e9ecf3; /* 气泡尖的颜色与气泡相同 */
+  border-left: 0;
+  margin-top: -15rpx; /* 调整尖的垂直对齐 */
+}
+
+.chat-right {
+  display: flex;
+  align-items: center;
+  margin-top: 20rpx;
+  /* 右对齐 */
+  justify-content: flex-end; 
+  
+}
+
+.chat-right text {
+  flex: 1;
+  color: #000;
+  margin-right: 10rpx;
+  padding: 10rpx 0;
+  border-radius: 11rpx;
+  word-break: break-all;
+  box-sizing: border-box;
+}
+
+.chat-bubble-right {
+  position: relative; /* 为伪元素定位 */
+  max-width: 70%;
+  background-color: #77cae8;
+  padding: 10rpx 15rpx;
+  border-radius: 10rpx;
+  margin-right: 25rpx;
+  /* margin-right: 10rpx; */
+  word-break: break-all;
+}
+.chat-bubble-right::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -15rpx; /* 调整尖的位置 */
+  width: 0;
+  height: 0;
+  border: 15rpx solid transparent; /* 调整边框大小 */
+  border-left-color: #77cae8; /* 气泡尖的颜色与气泡相同 */
+  border-right: 0;
+  margin-top: -15rpx; /* 调整尖的垂直对齐 */
+}
+
+.voice-bubble {
+  max-width: 85%;
+  background-color: #77cae8; /* 气泡颜色 */
+  padding: 0 15rpx;
+  border-radius: 10rpx;
+  margin-right: 25rpx;
+  /* margin-right: 10rpx; */
+  word-break: break-all;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+/* 语音时间文本 */
+.voice-time {
+  color: #000; /* 文字颜色 */
+  /* margin-right: 10rpx; */
+}
+
+/* 语音图标 */
+.voice-icon {
+  width: 45rpx;
+  height: 45rpx;
+  /* margin-right: 10rpx; */
+}
+
+ /* 右边气泡尖 */
+.voice-bubble::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -15rpx; /* 调整尖的位置 */
+  width: 0;
+  height: 0;
+  border: 15rpx solid transparent; /* 调整边框大小 */
+  border-left-color: #77cae8; /* 气泡尖的颜色与气泡相同 */
+  border-right: 0;
+  margin-top: -15rpx; /* 调整尖的垂直对齐 */
+} 
+
+.icon-left {
+  margin-right: 10rpx;
+}
+.icon-right {
+  margin-left: 10rpx;
+}
+
+.avatar-img {
+  width: 70rpx;
+  height: 70rpx;
+  border-radius: 70rpx;
+}
+
+
+/* 虚拟形象部分 */
+.ai-container {
+  /* margin-top: 2%; */
+  width: 98%;
+  position: relative;
+  align-items: flex-start;
+  flex: 1;
+  height: 50%;
+  display: flex;
+  /* left: 5%; */
+  bottom: 10%; /* 距离页面底部20%的距离 */
+  background-color: #e6edfd;
+}
+.ai-img {
+  margin-top: 10%;
+  width: 60vw;
+  object-fit: contain;
+  /* width: 100vw;
+  height: auto; */
+}
+
+.ai-context {
+  display: flex;
+  width: 60%;
+  font-size: 14px;
+  margin-top: 5%;
+  margin-right: 2%;
+}
+/* ai-气泡尖
+.tri-top {
+  position: relative;
+  border-top: 15rpx solid #42839b;
+  border-left: 20rpx solid transparent;
+  margin-top: 40rpx;
+  margin-left: 10rpx;
+}
+
+.tri-top2 {
+  top: -12rpx;
+  left: -4rpx;
+  position: absolute;
+  border-top: 30rpx solid #e6edfd;
+  border-left: 20rpx solid transparent;
+} */
+/* ai-气泡尖 */
+.tri-top {
+  position: relative;
+  border-top: 15rpx solid #42839b;
+  border-left: 20rpx solid transparent;
+  margin-top: 120rpx;
+  margin-left: 10rpx;
+}
+
+.tri-top2 {
+  position: absolute;
+  border-top: 30rpx solid #e6edfd;
+  border-left: 20rpx solid transparent;
+  top: -12rpx;
+  left: -4rpx;
+  margin-top: 4rpx;  /* 增加此值，向下移动气泡尖 */
+}
+
+.ai-bubble {
+  word-break: break-all;
+  text-align: justify;
+  width: 100%;
+  padding: 16rpx;
+  border-radius: 14rpx;
+  border: 6rpx solid #42839b;
+  line-height: 40rpx;
+  /* position: relative;
+  width: 50%;
+  background-color: #fff; /* 聊天气泡背景色 
+  padding: 10rpx 15rpx; /* 根据需要调整内边距 
+  border-radius: 20rpx; /* 圆角 
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.2); 阴影效果 */
+  /* margin-left: 10rpx; 根据需要调整与图片的间距 */
+}
+/* .ai-bubble::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -20rpx; /* 调整尖的位置 
+  width: 0;
+  height: 0;
+  border: 20rpx solid transparent; /* 调整边框大小 
+  border-right-color: #fff; /* 气泡尖的颜色与气泡相同 
+  border-left: 0;
+  margin-top: -20rpx; /* 调整尖的垂直对齐 
+  
+}
+.ai-bubble text {
+  color: #000;
+  word-break: break-all;
+} */
+/* ========== 输入按键区部分 - 干净版本 ========== */
+.ask-input-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 20rpx 30rpx;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  border-top: 1rpx solid #eee;
+  z-index: 100;
+  gap: 20rpx;
+  box-sizing: border-box;
+}
+
+/* 语音/键盘切换按钮 */
+.text-video-img {
+  width: 80rpx;
+  height: 80rpx;
+  flex-shrink: 0;
+  border-radius: 60rpx;
+}
+
+/* 文本输入框 */
+.input-big {
+  flex: 1;
+  min-height: 70rpx;
+  max-height: 150rpx;
+  background: #f5f5f5;
+  border-radius: 35rpx;
+  padding: 15rpx 25rpx;
+  border: 1rpx solid #ddd;
+  font-size: 28rpx;
+  line-height: 1.5;
+  overflow-y: auto;
+}
+
+/* 发送按钮图片 */
+.send-img {
+  width: 80rpx;
+  height: 80rpx;
+  flex-shrink: 0;
+}
+
+/* 语音输入按钮 */
+.voice-btn {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  font-size: 28rpx;
+  font-weight: normal;
+  background-color: #07c160 !important;
+  color: #fff !important;
+  border-radius: 40rpx;
+  margin: 0;
+  padding: 0;
+}
+
+.voice-btn::after {
+  border: none;
+}
+
+/* 语音按钮禁用状态 */
+.voice-btn[disabled] {
+  background-color: #ccc !important;
+  color: #666 !important;
+}
+
+
+/* 在文件末尾添加以下样式（不要删除原有的任何样式） */
+
+/* 熊猫图片后备容器 */
+.ai-img-wrapper {
+  position: relative;
+  width: 60vw;
+  margin-top: 10%;
+}
+
+.ai-img {
+  width: 100%;
+  object-fit: contain;
+}
+
+.ai-img-fallback {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 120rpx;
+}
+
+/* 语音/键盘切换按钮 - 加背景色和圆角，防止透明图片看不见 */
+/* .text-video-img {
+  background-color: #56c0fd;
+  border-radius: 50%;
+  padding: 12rpx;
+  box-sizing: border-box;
+} */
+
+/* 发送按钮 - 加背景色和圆角，防止图片缺失时看不见 */
+.send-img {
+  background-color: #ffffff;
+  border-radius: 50%;
+  /* padding: 12rpx; */
+  box-sizing: border-box;
+}

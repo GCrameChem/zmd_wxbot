@@ -1,0 +1,4 @@
+<view class="custom-nav">
+  <text class="nav-title">EmoMind</text>
+  <t-icon name="chat-bubble-smile" size="24px" class="icon"/>
+</view>

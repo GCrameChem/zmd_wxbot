@@ -1,0 +1,198 @@
+/* pages/register/register.wxss */
+.container {
+  margin: 20px;
+  /* display: flex; */
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* 将图片放在最底层 */
+}
+
+.header {
+  margin-top: 50%;
+  margin-left: 10%;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: bolder;
+  text-align: center;
+  white-space: pre-line; /* 保持文本中的换行 */
+}
+
+.icon {
+  margin-left: 10px;
+}
+
+/* 遮罩层的样式设计 */
+.wrapper {
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  justify-content: center; /* 水平居中 */
+  height: 100vh; /* 占满整个视口高度 */
+  z-index: 1000;
+  position: fixed; /* 固定位置，覆盖整个视口 */
+}
+
+.block {
+  background: white; /* 背景色 */
+  padding: 20px; /* 内边距 */
+  border-radius: 8px; /* 圆角 */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+  width: 80%; /* 宽度，可根据需要调整 */
+  max-width: 500px; /* 最大宽度 */
+  position: relative;
+}
+
+.button-container {
+  display: flex; /* 使用 Flexbox 布局 */
+  justify-content: space-between; /* 按钮间距均匀分配 */
+  margin-top: 20px; /* 顶部间距 */
+}
+
+.agreement {
+  height: 60vh;
+  border: none;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  overflow: scroll;
+  display: flex;
+}
+
+/* 知情同意书字体样式设计 */
+.first-title {
+  display: flex;
+  font-size: 20px; /* 标题字体大小 */
+  font-weight: bold; /* 加粗 */
+  margin-bottom: 15px; /* 下边距 */
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+  text-align: center; /* 文本居中 */
+}
+
+.section-title {
+  font-size: 16px; /* 小节标题字体大小 */
+  font-weight: bold; /* 加粗 */
+  margin-top: 10px; /* 上边距 */
+  margin-bottom: 10px; /* 下边距 */
+  text-align: justify; /* 两端对齐 */
+}
+
+.content {
+  font-size: 14px; /* 内容字体大小 */
+  margin-bottom: 10px; /* 下边距 */
+  text-align: justify; /* 两端对齐 */
+}
+.important-content {
+  font-size: 14px; /* 内容字体大小 */
+  margin-bottom: 10px; /* 下边距 */
+  text-align: justify; /* 两端对齐 */
+  color: red;
+}
+.greeting {
+  font-size: 14px; /* 问候语字体大小 */
+  font-style: italic; /* 斜体 */
+  margin-bottom: 10px; /* 下边距 */
+  text-align: justify; /* 两端对齐 */
+}
+
+/* 表单信息的样式 */
+.form-container {
+  margin-left: 10%;
+  margin-top: 25%;
+  margin-bottom: 20%; /* 将表单容器放置在下半部分，调整这个值来控制高度 */
+  width: 80%;
+}
+/* 设置相关注册信息 */
+.error-message {
+  color: red;
+  font-size: 12px;
+}
+.input-field {
+  margin-bottom: 10%;
+  /* z-index: 0; */
+}
+
+.login-filed {
+  margin-top: 10%;
+}
+.new-input {
+  background-color: #f5f8ff !important;
+  border-radius: 0.8em;
+}
+.new-input .van-field__control {
+  color: #000; /* 设置输入框中字体的颜色 */
+}
+.new-input .van-field__placeholder {
+  color: rgb(107, 107, 107); /* 设置输入框的占位符颜色 */
+  font-size: 12px;
+}
+
+.new-login {
+  background-color: #8ec5fe !important;
+  border: #8ec5fe !important;
+}
+
+.return-button {
+  background-color: #f5f8ff !important;
+  border: #fff !important;
+  color: #000 !important;
+  font-weight: bolder;
+}
+
+.model-button {
+  width: 80px;
+  height: 32px;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+button {
+  background-color: #8ec5fe;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+/* 感觉没用，但是删了有影响>< */
+input, button {
+  width: 100%;
+  margin-bottom: 10px;
+  background-color: #8ec5fe;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+
+/* 让验证码输入框和按钮在同一行显示 */
+.flex-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;  /* 垂直居中对齐 */
+}
+
+
+/* 获取验证码按钮的样式 */
+.send-code {
+  width: 60%;
+  font-size: 14px;
+  border-radius: 30px;
+  line-height: 25px;
+  margin-bottom: 0;
+  background-color: #8ec5fe !important;
+  border: #8ec5fe !important;
+}
+
+/* 按钮禁用状态的样式 */
+.send-code:disabled {
+  background-color: #ccc;
+  color: #666;
+}
